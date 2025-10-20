@@ -1,0 +1,17 @@
+10:05:05 **** Incremental Build of configuration Debug for project L432RC_CAN ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/tinymovr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/tinymovr.d" -MT"Core/Src/tinymovr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/tinymovr.o"
+arm-none-eabi-gcc -o "L432RC_CAN.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_CAN\STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L432RC_CAN.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: L432RC_CAN.elf
+ 
+arm-none-eabi-size  L432RC_CAN.elf 
+arm-none-eabi-objdump -h -S L432RC_CAN.elf  > "L432RC_CAN.list"
+   text	   data	    bss	    dec	    hex	filename
+  17352	    104	   2208	  19664	   4cd0	L432RC_CAN.elf
+Finished building: default.size.stdout
+ 
+Finished building: L432RC_CAN.list
+ 
+
+10:05:09 Build Finished. 0 errors, 0 warnings. (took 4s.110ms)
+

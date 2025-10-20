@@ -1,0 +1,5 @@
+../Core/Src/app.c:27:6:bled_toggle	8	static
+../Core/Src/app.c:31:6:bled_set	16	static
+../Core/Src/app.c:39:6:UART_Printf	280	static
+../Core/Src/app.c:48:6:app_init	32	static
+../Core/Src/app.c:67:6:app_main	8	static

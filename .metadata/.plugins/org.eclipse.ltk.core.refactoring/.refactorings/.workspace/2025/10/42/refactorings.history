@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;L433RC_CAN&apos; to &apos;L432RC_CAN&apos;" description="Rename resource &apos;L433RC_CAN&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/L433RC_CAN" name="L432RC_CAN" stamp="1760308238750" updateReferences="true"/>
+</session>

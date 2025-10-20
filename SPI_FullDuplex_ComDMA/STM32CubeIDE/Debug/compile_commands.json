@@ -1,0 +1,82 @@
+[
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/BSP/STM32L4xx_Nucleo_32/stm32l4xx_nucleo_32.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Drivers/BSP/STM32L4xx_Nucleo_32/stm32l4xx_nucleo_32.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/BSP/STM32L4xx_Nucleo_32/stm32l4xx_nucleo_32.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Src/system_stm32l4xx.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Drivers/CMSIS/system_stm32l4xx.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Src/system_stm32l4xx.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_cortex.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_dma.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_gpio.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_pwr.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_pwr_ex.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_rcc.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_spi.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc -mcpu\u003dcortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Example/Startup/startup_stm32l432kcux.o\" \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Example/Startup/startup_stm32l432kcux.s\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Example/Startup/startup_stm32l432kcux.s"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Src/main.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Example/User/main.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Src/main.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Src/stm32l4xx_hal_msp.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Example/User/stm32l4xx_hal_msp.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Src/stm32l4xx_hal_msp.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Src/stm32l4xx_it.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Example/User/stm32l4xx_it.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/Src/stm32l4xx_it.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Example/User/syscalls.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Example/User/syscalls.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Example/User/syscalls.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Example/User/sysmem.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../../Inc -I../../Drivers/CMSIS/Include -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/BSP/STM32L4xx_Nucleo_32 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Debug/Example/User/sysmem.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/SPI_FullDuplex_ComDMA/STM32CubeIDE/Example/User/sysmem.c"
+  }
+]

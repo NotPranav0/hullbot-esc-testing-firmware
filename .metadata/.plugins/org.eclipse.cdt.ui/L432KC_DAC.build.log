@@ -1,0 +1,10 @@
+10:23:49 **** Incremental Build of configuration Debug for project L432KC_DAC ****
+make -j12 all 
+arm-none-eabi-size  L432KC_DAC.elf 
+   text	   data	    bss	    dec	    hex	filename
+  28424	    104	   3448	  31976	   7ce8	L432KC_DAC.elf
+Finished building: default.size.stdout
+ 
+
+10:23:49 Build Finished. 0 errors, 0 warnings. (took 367ms)
+

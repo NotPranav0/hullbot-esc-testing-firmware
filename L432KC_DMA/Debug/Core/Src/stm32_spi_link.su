@@ -1,0 +1,10 @@
+../Core/Src/stm32_spi_link.c:12:13:spi_int_assert	8	static
+../Core/Src/stm32_spi_link.c:16:13:spi_int_deassert	8	static
+../Core/Src/stm32_spi_link.c:20:6:start_listening	8	static
+../Core/Src/stm32_spi_link.c:24:6:stop_listening	8	static
+../Core/Src/stm32_spi_link.c:28:6:link_init	16	static
+../Core/Src/stm32_spi_link.c:42:6:process_packet	24	static
+../Core/Src/stm32_spi_link.c:71:6:process_text	24	static
+../Core/Src/stm32_spi_link.c:80:6:send_packet_to_pi	16	static
+../Core/Src/stm32_spi_link.c:105:6:HAL_SPI_TxRxCpltCallback	24	static
+../Core/Src/stm32_spi_link.c:117:6:HAL_SPI_ErrorCallback	16	static

@@ -1,0 +1,10 @@
+16:48:08 **** Incremental Build of configuration Debug for project stlink-test ****
+make -j12 all 
+arm-none-eabi-size  stlink-test.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5116	     12	   1572	   6700	   1a2c	stlink-test.elf
+Finished building: default.size.stdout
+ 
+
+16:48:09 Build Finished. 0 errors, 0 warnings. (took 369ms)
+

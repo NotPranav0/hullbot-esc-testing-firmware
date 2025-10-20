@@ -1,0 +1,143 @@
+#include "stm32_spi_link.h"
+#include "meas_config.h"
+#include "main.h"
+
+static uint8_t spi_tx_buf[BUFFER_SIZE];
+static uint8_t spi_rx_buf[BUFFER_SIZE];
+static uint8_t dummy_buf[BUFFER_SIZE];
+static uint8_t rx_copy_buffer[BUFFER_SIZE];
+
+static SPI_HandleTypeDef *h_spi;
+
+bool* h_packet_recieved;
+
+static void spi_int_assert(void) {
+	printf("assert\r\n");
+    HAL_GPIO_WritePin(SPI_INT_GPIO_Port, SPI_INT_Pin, GPIO_PIN_SET);
+}
+
+static void spi_int_deassert(void) {
+	printf("deassert\r\n");
+    HAL_GPIO_WritePin(SPI_INT_GPIO_Port, SPI_INT_Pin, GPIO_PIN_RESET);
+}
+
+
+void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved) {
+    h_spi = spi;
+    h_packet_recieved = packet_recieved;
+    spi_int_deassert();
+    printf("spi-armed\r\n");
+    memset(dummy_buf, 0, BUFFER_SIZE);
+    // Start listening for a packet from the Pi.
+    if (HAL_SPI_TransmitReceive_DMA(h_spi, dummy_buf, spi_rx_buf, BUFFER_SIZE) != HAL_OK) {
+        Error_Handler();
+    }
+}
+
+/**
+ * @brief This function contains the application logic to process a fully received packet.
+ */
+void process_packet() {
+    Commands_t command = rx_copy_buffer[0];
+    uint16_t payload_len = (rx_copy_buffer[1] << 8) | rx_copy_buffer[2];
+
+    // Point to the payload, which starts after the 3-byte header
+    const uint8_t* payload = &rx_copy_buffer[3];
+
+    switch (command) {
+        case SET_CONFIG:
+			// MeasConfig_t* received_config = (MeasConfig_t*)payload;
+			// Use the configuration data...
+            break;
+
+        case SEND_TEXT:
+            process_text(payload, payload_len);
+            break;
+
+        default:
+            // Handle unknown command
+            break;
+    }
+}
+
+void process_text(char* text, uint16_t len) {
+	printf("Received Text: %.*s\r\n", len, text);
+
+    if(strncmp(text, "ping", len) == 0) {
+        const char* response = "pong";
+        send_packet_to_pi(SEND_TEXT, (const uint8_t*)response, strlen(response));
+    }
+}
+
+void send_packet_to_pi(uint8_t command, const uint8_t* payload, uint16_t length) {
+    if ((length + 3) > BUFFER_SIZE) {
+       printf("Attempted to send too big a packet\r\n");
+       Error_Handler()
+       return;
+    }
+
+    //Build the packet header
+    spi_tx_buf[0] = command;
+    spi_tx_buf[1] = (length >> 8) & 0xFF;
+    spi_tx_buf[2] = length & 0xFF;
+
+    //Copy the payload
+    memcpy(&spi_tx_buf[3], payload, length);
+
+    //Signal the Pi that data is ready
+    spi_int_assert();
+
+    // 4. Start a NON-BLOCKING transfer. The Pi will provide the clock.
+    // The HAL_SPI_TxCpltCallback will fire when this is done.
+    if (HAL_SPI_TransmitReceive_IT(h_spi, spi_tx_buf, dummy_buf, length + 3) != HAL_OK) {
+        spi_int_deassert();
+        Error_Handler();
+    }
+}
+
+// --- STM32 HAL CALLBACKS ---
+
+/**
+ * @brief Callback for when a reception from the Pi (Master) is complete.
+ * @note This is triggered when the Pi raises the Chip Select (CS) line.
+ */
+void HAL_SPI_TxRxHalfCpltCallback(SPI_HandleTypeDef *spi) {
+		*h_packet_recieved = true;
+		memcpy(rx_copy_buffer, spi_rx_buf, BUFFER_SIZE);
+}
+
+/**
+ * @brief Callback for when a transmission TO the Pi (initiated by us) is complete.
+ */
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *spi) {
+	// The transfer is done, so we can lower the interrupt line.
+	spi_int_deassert();
+}
+
+/**
+ * @brief  SPI error callback.
+ * @param  hspi: SPI handle
+ * @note   This function is executed when a communication error is detected.
+ */
+void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi) {
+	uint32_t error_code = HAL_SPI_GetError(hspi);
+
+	printf("--- SPI ERROR! ---\r\n");
+
+	if (error_code & HAL_SPI_ERROR_OVR) {
+		printf("Error Type: Overrun (OVR)\r\n");
+	}
+	if (error_code & HAL_SPI_ERROR_MODF) {
+		printf("Error Type: Mode Fault (MODF)\r\n");
+	}
+	if (error_code & HAL_SPI_ERROR_CRC) {
+		printf("Error Type: CRC Error\r\n");
+	}
+
+	// IMPORTANT: You MUST clear the error flags and re-start the reception,
+	// otherwise the SPI peripheral will be stuck.
+	HAL_SPI_Abort(hspi); // Abort current operations
+	if (HAL_SPI_Receive_DMA(h_spi, spi_rx_buf, BUFFER_SIZE) != HAL_OK) {
+		Error_Handler(); // Failed to re-arm
+	}
+}

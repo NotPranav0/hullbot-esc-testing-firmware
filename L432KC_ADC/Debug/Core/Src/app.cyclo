@@ -1,0 +1,5 @@
+../Core/Src/app.c:13:6:app_init	2
+../Core/Src/app.c:28:7:raw_to_volts	1
+../Core/Src/app.c:37:10:adc_read_channel_blocking	2
+../Core/Src/app.c:52:6:app_main	1
+../Core/Src/app.c:63:5:_write	2

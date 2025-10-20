@@ -1,0 +1,4 @@
+../Core/Src/app.c:19:6:app_init	1
+../Core/Src/app.c:34:6:app_main	2
+../Core/Src/app.c:48:6:HAL_TIM_PeriodElapsedCallback	2
+../Core/Src/app.c:58:5:_write	2

@@ -1,0 +1,10 @@
+../Core/Src/lcd.c:20:13:command	32	static
+../Core/Src/lcd.c:26:13:display	8	static
+../Core/Src/lcd.c:33:13:setReg	32	static
+../Core/Src/lcd.c:40:13:write_char	32	static
+../Core/Src/lcd.c:46:13:send_string	24	static
+../Core/Src/lcd.c:53:13:setCursor	16	static
+../Core/Src/lcd.c:66:6:LCD_Init	16	static
+../Core/Src/lcd.c:125:6:LCD_Clear	8	static
+../Core/Src/lcd.c:131:6:LCD_Set_RGB	16	static
+../Core/Src/lcd.c:138:6:LCD_Send_String	16	static

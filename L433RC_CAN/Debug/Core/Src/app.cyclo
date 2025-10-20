@@ -1,0 +1,5 @@
+../Core/Src/app.c:10:6:app_init	1
+../Core/Src/app.c:17:6:setup	5
+../Core/Src/app.c:46:6:spin	5
+../Core/Src/app.c:73:6:app_main	1
+../Core/Src/app.c:80:5:_write	2

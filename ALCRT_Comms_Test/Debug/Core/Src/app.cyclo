@@ -1,0 +1,5 @@
+../Core/Src/app.c:27:6:bled_toggle	1
+../Core/Src/app.c:31:6:bled_set	2
+../Core/Src/app.c:39:6:UART_Printf	1
+../Core/Src/app.c:48:6:app_init	2
+../Core/Src/app.c:67:6:app_main	1

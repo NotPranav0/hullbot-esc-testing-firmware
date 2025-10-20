@@ -1,0 +1,10 @@
+12:06:07 **** Incremental Build of configuration Debug for project L432KC_BLINK ****
+make -j12 all 
+arm-none-eabi-size  L432KC_BLINK.elf 
+   text	   data	    bss	    dec	    hex	filename
+  11340	     12	   1708	  13060	   3304	L432KC_BLINK.elf
+Finished building: default.size.stdout
+ 
+
+12:06:08 Build Finished. 0 errors, 0 warnings. (took 313ms)
+

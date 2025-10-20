@@ -1,0 +1,39 @@
+15:56:49 **** Incremental Build of configuration Debug for project L432KC_DMA ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/stm32_spi_link.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/stm32_spi_link.d" -MT"Core/Src/stm32_spi_link.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/stm32_spi_link.o"
+../Core/Src/stm32_spi_link.c: In function 'HAL_SPI_ErrorCallback':
+../Core/Src/stm32_spi_link.c:112:18: warning: unused variable 'error_code' [-Wunused-variable]
+  112 |         uint32_t error_code = HAL_SPI_GetError(hspi);
+      |                  ^~~~~~~~~~
+arm-none-eabi-gcc -o "L432KC_DMA.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L432KC_DMA\STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L432KC_DMA.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: L432KC_DMA.elf
+ 
+arm-none-eabi-size  L432KC_DMA.elf 
+arm-none-eabi-objdump -h -S L432KC_DMA.elf  > "L432KC_DMA.list"
+   text	   data	    bss	    dec	    hex	filename
+  23332	    104	   2496	  25932	   654c	L432KC_DMA.elf
+Finished building: default.size.stdout
+ 
+Finished building: L432KC_DMA.list
+ 
+16:04:57 **** Incremental Build of configuration Debug for project L432KC_DMA ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/stm32_spi_link.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L432xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/stm32_spi_link.d" -MT"Core/Src/stm32_spi_link.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/stm32_spi_link.o"
+arm-none-eabi-gcc -o "L432KC_DMA.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L432KC_DMA\STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L432KC_DMA.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: L432KC_DMA.elf
+ 
+arm-none-eabi-size  L432KC_DMA.elf 
+arm-none-eabi-objdump -h -S L432KC_DMA.elf  > "L432KC_DMA.list"
+   text	   data	    bss	    dec	    hex	filename
+  33584	    468	   2500	  36552	   8ec8	L432KC_DMA.elf
+Finished building: default.size.stdout
+ 
+Finished building: L432KC_DMA.list
+ 
+16:05:27 **** Incremental Build of configuration Debug for project L432KC_DMA ****
+make -j12 all 
+arm-none-eabi-size  L432KC_DMA.elf 
+   text	   data	    bss	    dec	    hex	filename
+  33584	    468	   2500	  36552	   8ec8	L432KC_DMA.elf
+Finished building: default.size.stdout
+ 

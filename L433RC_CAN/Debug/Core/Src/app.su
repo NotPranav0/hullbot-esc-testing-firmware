@@ -1,0 +1,5 @@
+../Core/Src/app.c:10:6:app_init	16	static
+../Core/Src/app.c:17:6:setup	40	static
+../Core/Src/app.c:46:6:spin	24	static
+../Core/Src/app.c:73:6:app_main	8	static
+../Core/Src/app.c:80:5:_write	24	static

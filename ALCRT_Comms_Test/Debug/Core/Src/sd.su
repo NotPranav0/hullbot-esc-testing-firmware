@@ -1,0 +1,15 @@
+../Core/Src/sd.c:16:13:sd_select	8	static
+../Core/Src/sd.c:20:13:sd_unselect	8	static
+../Core/Src/sd.c:24:16:sd_tx_rx_byte	32	static
+../Core/Src/sd.c:30:6:sd_powerup_seq	16	static
+../Core/Src/sd.c:44:6:sd_command	16	static
+../Core/Src/sd.c:58:9:sd_read_res1	16	static
+../Core/Src/sd.c:67:9:sd_go_idle_state	24	static
+../Core/Src/sd.c:90:6:sd_read_res7	24	static
+../Core/Src/sd.c:104:6:sd_send_if_cond	32	static
+../Core/Src/sd.c:126:6:sd_read_ocr	32	static
+../Core/Src/sd.c:147:9:sd_send_app	24	static
+../Core/Src/sd.c:170:9:sd_send_opcond	24	static
+../Core/Src/sd.c:194:5:SD_Init	24	static
+../Core/Src/sd.c:249:9:sd_read_block	48	static
+../Core/Src/sd.c:306:9:sd_write_block	40	static

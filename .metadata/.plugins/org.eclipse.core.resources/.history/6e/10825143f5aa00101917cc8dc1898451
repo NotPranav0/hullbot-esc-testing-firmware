@@ -1,0 +1,32 @@
+#ifndef STM32_SPI_LINK_H
+#define STM32_SPI_LINK_H
+
+#include "stm32l4xx_hal.h"
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+
+#define TX_MAX 1024
+#define RX_MAX 1024
+
+typedef enum
+{
+	SEND_BYTE = 0x5A,
+	POLL_BYTE = 0xA5,
+	READ_BYTE = 0xA7
+} opcode_t;
+
+typedef enum
+{
+	STATUS_EMPTY = 0xFF,
+	STATUS_READY = 0x01
+} tx_state_t;
+
+
+void link_init(SPI_HandleTypeDef *spi);
+void link_task(opcode_t opcode);
+void link_send_string(const char* s);
+
+#endif
+

@@ -1,0 +1,8 @@
+../Core/Src/stm32_spi_link.c:10:13:spi_int_assert	1
+../Core/Src/stm32_spi_link.c:15:13:spi_int_deassert	1
+../Core/Src/stm32_spi_link.c:24:13:process_packet	5
+../Core/Src/stm32_spi_link.c:61:6:link_init	2
+../Core/Src/stm32_spi_link.c:71:6:send_packet_to_pi	3
+../Core/Src/stm32_spi_link.c:102:6:HAL_SPI_RxCpltCallback	2
+../Core/Src/stm32_spi_link.c:119:6:HAL_SPI_TxCpltCallback	1
+../Core/Src/stm32_spi_link.c:129:6:HAL_SPI_ErrorCallback	5

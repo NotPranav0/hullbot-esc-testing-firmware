@@ -1,0 +1,70 @@
+2025-08-11 16:47:34,557 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 202206600 Bytes (622854144)
+2025-08-11 16:47:34,764 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 223030128 Bytes (622854144)
+2025-08-11 16:47:35,084 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 291814144 Bytes (622854144)
+2025-08-11 16:47:35,438 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:35,438 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:35,651 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SPI
+2025-08-11 16:47:35,652 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: NVIC
+2025-08-11 16:47:35,652 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: CAN
+2025-08-11 16:47:35,652 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: SYS
+2025-08-11 16:47:35,653 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: GPIO
+2025-08-11 16:47:35,653 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: ADC
+2025-08-11 16:47:35,653 [INFO] BlockDiagram:2775 - set Specific Code input for plugin: RCC
+2025-08-11 16:47:35,654 [INFO] CodeGenerator:892 - code generatio: config db path: C:/Users/pranav.budhwar/.stm32cubemx/databases/DB.6.0.141/db/
+2025-08-11 16:47:35,874 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\MXTmpFiles\license.tmp_save
+2025-08-11 16:47:36,366 [INFO] CodeEngine:289 - Generated code: C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\MXTmpFiles\license.tmp
+2025-08-11 16:47:36,428 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:36,428 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:36,658 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\MXTmpFiles\gpio.tmp_save
+2025-08-11 16:47:36,865 [INFO] CodeEngine:289 - Generated code: C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\MXTmpFiles\gpio.tmp
+2025-08-11 16:47:37,422 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:37,423 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:37,664 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Src\stm32l4xx_it.c_save
+2025-08-11 16:47:37,890 [INFO] CodeEngine:289 - Generated code: C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Src\stm32l4xx_it.c
+2025-08-11 16:47:37,900 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Inc\stm32l4xx_it.h_save
+2025-08-11 16:47:38,026 [INFO] CodeEngine:289 - Generated code: C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Inc\stm32l4xx_it.h
+2025-08-11 16:47:38,048 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Src\stm32l4xx_hal_msp.c_save
+2025-08-11 16:47:38,340 [INFO] CodeEngine:289 - Generated code: C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Src\stm32l4xx_hal_msp.c
+2025-08-11 16:47:38,349 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\MXTmpFiles\system.tmp_save
+2025-08-11 16:47:38,421 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:38,422 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:38,468 [INFO] CodeEngine:289 - Generated code: C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\MXTmpFiles\system.tmp
+2025-08-11 16:47:38,495 [INFO] CodeEngine:321 - oldGeneratedFile, C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Inc\stm32l4xx_hal_conf.h_save
+2025-08-11 16:47:38,670 [INFO] CodeEngine:345 - Generated code: C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Inc\stm32l4xx_hal_conf.h
+2025-08-11 16:47:38,721 [INFO] ApiDbMcu:532 - Load IP Config File for ADC1
+2025-08-11 16:47:38,724 [INFO] ApiDbMcu:532 - Load IP Config File for CAN1
+2025-08-11 16:47:38,727 [INFO] ApiDbMcu:532 - Load IP Config File for SPI1
+2025-08-11 16:47:38,732 [INFO] ApiDbMcu:532 - Load IP Config File for RCC
+2025-08-11 16:47:38,745 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Inc\main.h_save
+2025-08-11 16:47:38,938 [INFO] CodeEngine:289 - Generated code: C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Inc\main.h
+2025-08-11 16:47:38,954 [INFO] CodeEngine:265 - oldGeneratedFile, C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Src\main.c_save
+2025-08-11 16:47:39,169 [INFO] CodeEngine:289 - Generated code: C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC\Core\Src\main.c
+2025-08-11 16:47:39,438 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:39,438 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:39,715 [INFO] ProjectBuilder:3606 - Time for Copy HAL[1] : 218mS.
+2025-08-11 16:47:39,724 [INFO] ProjectBuilder:5216 - Project Generator version: 4.7.0-B52
+2025-08-11 16:47:39,815 [INFO] ConfigFileManager:1595 - The Die is : DIE435
+2025-08-11 16:47:39,840 [INFO] ApiDbMcu:532 - Load IP Config File for FATFS
+2025-08-11 16:47:39,855 [INFO] ApiDbMcu:532 - Load IP Config File for FREERTOS
+2025-08-11 16:47:39,878 [INFO] ApiDbMcu:532 - Load IP Config File for TOUCHSENSING
+2025-08-11 16:47:39,894 [INFO] ApiDbMcu:532 - Load IP Config File for USB_DEVICE
+2025-08-11 16:47:40,426 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:40,426 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:40,729 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] 
+2025-08-11 16:47:41,433 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:41,433 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:42,437 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:42,438 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:43,438 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:43,438 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:44,168 [INFO] ProjectBuilder:5496 - Time for Generating toolchain IDE Files: 4443mS.
+2025-08-11 16:47:44,171 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 1mS.
+2025-08-11 16:47:44,175 [INFO] ProjectBuilder:3463 - Time for Copy CMSIS : 0mS.
+2025-08-11 16:47:44,452 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:44,452 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:45,425 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:45,426 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:46,438 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] [Fatal Error] :1:1: Premature end of file.
+2025-08-11 16:47:46,438 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:46,639 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 
+2025-08-11 16:47:46,641 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] 

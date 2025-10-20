@@ -1,0 +1,15 @@
+../Core/Src/tinymovr.c:12:6:tm_init	16	static
+../Core/Src/tinymovr.c:41:6:HAL_CAN_RxFifo0MsgPendingCallback	16	static
+../Core/Src/tinymovr.c:50:6:can_send_frame	16	static
+../Core/Src/tinymovr.c:61:6:tm_set_gains	16	static
+../Core/Src/tinymovr.c:68:6:tm_set_vel_inc	16	static
+../Core/Src/tinymovr.c:74:6:tm_set_limits	16	static
+../Core/Src/tinymovr.c:81:27:tm_get_encoder_config	24	static
+../Core/Src/tinymovr.c:92:6:tm_set_encoder_config	16	static
+../Core/Src/tinymovr.c:99:6:tm_set_motor_config	16	static
+../Core/Src/tinymovr.c:107:6:tm_set_state	16	static
+../Core/Src/tinymovr.c:114:25:tm_get_state	16	static
+../Core/Src/tinymovr.c:124:6:tm_save_config	8	static
+../Core/Src/tinymovr.c:129:6:tm_set_vel_setpoint	16	static
+../Core/Src/tinymovr.c:136:7:tm_get_encoder_estimates	16	static
+../Core/Src/tinymovr.c:145:6:float32_to_4_byte_array	16	static
