@@ -1,11 +1,13 @@
 #ifndef STM32_SPI_LINK_H
 #define STM32_SPI_LINK_H
 
-#include "stm32l4xx_hal.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "stm32l4xx_hal.h"
+#include "meas_config.h"
 
 // MAX SPI BUFFER SIZE
 #define BUFFER_SIZE 64

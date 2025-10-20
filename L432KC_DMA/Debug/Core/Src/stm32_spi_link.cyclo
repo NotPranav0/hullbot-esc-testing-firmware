@@ -1,10 +1,10 @@
 ../Core/Src/stm32_spi_link.c:12:13:spi_int_assert	1
 ../Core/Src/stm32_spi_link.c:16:13:spi_int_deassert	1
 ../Core/Src/stm32_spi_link.c:20:6:start_listening	2
-../Core/Src/stm32_spi_link.c:24:6:stop_listening	1
-../Core/Src/stm32_spi_link.c:28:6:link_init	1
-../Core/Src/stm32_spi_link.c:42:6:process_packet	3
-../Core/Src/stm32_spi_link.c:71:6:process_text	2
-../Core/Src/stm32_spi_link.c:80:6:send_packet_to_pi	2
-../Core/Src/stm32_spi_link.c:105:6:HAL_SPI_TxRxCpltCallback	1
-../Core/Src/stm32_spi_link.c:117:6:HAL_SPI_ErrorCallback	1
+../Core/Src/stm32_spi_link.c:24:6:link_init	1
+../Core/Src/stm32_spi_link.c:41:6:process_packet	3
+../Core/Src/stm32_spi_link.c:59:6:process_text	2
+../Core/Src/stm32_spi_link.c:68:6:process_config	1
+../Core/Src/stm32_spi_link.c:77:6:send_packet_to_pi	2
+../Core/Src/stm32_spi_link.c:100:6:HAL_SPI_TxRxCpltCallback	1
+../Core/Src/stm32_spi_link.c:112:6:HAL_SPI_ErrorCallback	1

@@ -22,12 +22,19 @@ void start_listening() {
 }
 
 void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved) {
+	spi_int_deassert();
+
     h_spi = spi;
     h_packet_recieved = packet_recieved;
-    spi_int_deassert();
-    memset(spi_tx_buf, 0x80, BUFFER_SIZE);
+
+    memset(spi_tx_buf, 0, BUFFER_SIZE);
+
     // Start listening for a packet from the Pi.
     start_listening();
+
+    //boot message
+    const char* response = "booted";
+    send_packet_to_pi(START_UP, (const uint8_t*)response, strlen(response));
 }
 
 

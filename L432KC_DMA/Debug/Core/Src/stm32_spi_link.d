@@ -28,7 +28,7 @@ Core/Src/stm32_spi_link.o: ../Core/Src/stm32_spi_link.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- ../Core/Inc/meas_config.h ../Core/Inc/main.h
+ ../Core/Inc/meas_config.h ../Core/Inc/meas_config.h ../Core/Inc/main.h
 ../Core/Inc/stm32_spi_link.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -58,5 +58,6 @@ Core/Src/stm32_spi_link.o: ../Core/Src/stm32_spi_link.c \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
+../Core/Inc/meas_config.h:
 ../Core/Inc/meas_config.h:
 ../Core/Inc/main.h:
