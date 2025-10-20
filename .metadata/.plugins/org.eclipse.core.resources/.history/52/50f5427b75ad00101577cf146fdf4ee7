@@ -1,0 +1,20 @@
+#ifndef INC_MEAS_CONFIG_H_
+#define INC_MEAS_CONFIG_H_
+
+#include <stdint.h>
+
+// no padding bytes.
+#pragma pack(push, 1)
+
+//example config struct
+typedef struct {
+    float    dac1_voltage;
+    float    dac2_voltage;
+    float threshold1;
+    float threshold2;
+} MeasConfig_t;
+
+#pragma pack(pop)
+
+
+#endif /* INC_MEAS_CONFIG_H_ */

@@ -7,28 +7,27 @@
 #include <stdio.h>
 #include <string.h>
 
+// MAX SPI BUFFER SIZE
 #define BUFFER_SIZE 64
 
+//Pi -> STM32 Commands
 typedef enum {
-	//Pi -> STM32 Commands
 	SET_CONFIG = 0x01,
 	SEND_TEXT = 0x02
 
 } rx_commands_t;
 
+//STM32 -> Pi Commands
 typedef enum {
-	//STM32 -> Pi Commands
 	START_UP = 0x80,
-	LOG_MESSAGE = 0x81,
-	STATUS_UPDATE = 0x82
+	LOG_MESSAGE = 0x81
 } tx_commands_t;
-
-
 
 void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved);
 void send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t length);
 void process_packet();
 void process_text(char* text, uint16_t len);
+void process_config(MeasConfig_t* received_config);
 
 #endif
 

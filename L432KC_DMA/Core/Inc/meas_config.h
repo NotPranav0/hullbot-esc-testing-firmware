@@ -5,12 +5,15 @@
 
 // no padding bytes.
 #pragma pack(push, 1)
+
+//example config struct (must match rpi definition)
 typedef struct {
     float    dac1_voltage;
     float    dac2_voltage;
     float threshold1;
     float threshold2;
 } MeasConfig_t;
+
 #pragma pack(pop)
 
 

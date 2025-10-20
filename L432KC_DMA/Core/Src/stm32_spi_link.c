@@ -21,10 +21,6 @@ void start_listening() {
 	while (HAL_SPI_TransmitReceive_DMA(h_spi, spi_tx_buf, spi_rx_buf, BUFFER_SIZE) != HAL_OK) {}
 }
 
-void stop_listening() {
-	HAL_SPI_Abort(h_spi);
-}
-
 void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved) {
     h_spi = spi;
     h_packet_recieved = packet_recieved;
@@ -35,33 +31,18 @@ void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved) {
 }
 
 
-
-/**
- * @brief This function contains the application logic to process a fully received packet.
- */
 void process_packet() {
 	rx_commands_t command = rx_copy_buffer[0];
-    uint16_t payload_len = (rx_copy_buffer[1] << 8) | rx_copy_buffer[2];
-
-    // Point to the payload, which starts after the 3-byte header
+	uint16_t payload_len = (rx_copy_buffer[1] << 8) | rx_copy_buffer[2];
     const uint8_t* payload = &rx_copy_buffer[3];
 
     switch (command) {
         case SET_CONFIG:
-			MeasConfig_t* received_config = (MeasConfig_t*)payload;
-			printf("Received Config Data with\r\n");
-            printf("  dac1_voltage: %f\r\n", received_config->dac1_voltage);
-            printf("  threshold1: %f\r\n", received_config->threshold1);
-            printf("  dac2_voltage: %f\r\n", received_config->dac2_voltage);
-            printf("  threshold2: %f\r\n", received_config->threshold2);
-
-
+        	process_config((MeasConfig_t*)payload);
             break;
-
         case SEND_TEXT:
             process_text((char*)payload, payload_len);
             break;
-
         default:
             // Handle unknown command
             break;
@@ -75,6 +56,15 @@ void process_text(char* text, uint16_t len) {
         const char* response = "pong";
         send_packet_to_pi(LOG_MESSAGE, (const uint8_t*)response, strlen(response));
     }
+}
+
+void process_config(MeasConfig_t* received_config) {
+	printf("Received Config Data with\r\n");
+
+	printf("  dac1_voltage: %f\r\n", received_config->dac1_voltage);
+	printf("  threshold1: %f\r\n", received_config->threshold1);
+	printf("  dac2_voltage: %f\r\n", received_config->dac2_voltage);
+	printf("  threshold2: %f\r\n", received_config->threshold2);
 }
 
 void send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t length) {
@@ -96,12 +86,10 @@ void send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t l
     spi_int_assert();
 }
 
+
+
 // --- STM32 HAL CALLBACKS ---
 
-/**
- * @brief Callback for when a reception from the Pi (Master) is complete.
- * @note This is triggered when the Pi raises the Chip Select (CS) line.
- */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *spi) {
 	spi_int_deassert();
 	*h_packet_recieved = true;
