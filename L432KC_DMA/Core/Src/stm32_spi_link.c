@@ -32,9 +32,10 @@ void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved) {
     // Start listening for a packet from the Pi.
     start_listening();
 
-    //boot message
-    const char* response = "booted";
-    send_packet_to_pi(START_UP, (const uint8_t*)response, strlen(response));
+    const char* response = "pong";
+    send_packet_to_pi(LOG_MESSAGE, (const uint8_t*)response, strlen(response));
+
+
 }
 
 
@@ -62,6 +63,8 @@ void process_text(char* text, uint16_t len) {
     if(strncmp(text, "ping", len) == 0) {
         const char* response = "pong";
         send_packet_to_pi(LOG_MESSAGE, (const uint8_t*)response, strlen(response));
+    } else if(strncmp(text, "reset", len) == 0) {
+        NVIC_SystemReset();
     }
 }
 

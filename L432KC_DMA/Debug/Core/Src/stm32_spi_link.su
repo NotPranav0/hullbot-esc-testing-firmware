@@ -1,10 +1,11 @@
+../Drivers/CMSIS/Include/core_cm4.h:1933:34:__NVIC_SystemReset	4	static,ignoring_inline_asm
 ../Core/Src/stm32_spi_link.c:12:13:spi_int_assert	8	static
 ../Core/Src/stm32_spi_link.c:16:13:spi_int_deassert	8	static
 ../Core/Src/stm32_spi_link.c:20:6:start_listening	8	static
 ../Core/Src/stm32_spi_link.c:24:6:link_init	24	static
-../Core/Src/stm32_spi_link.c:41:6:process_packet	16	static
-../Core/Src/stm32_spi_link.c:59:6:process_text	24	static
-../Core/Src/stm32_spi_link.c:68:6:process_config	16	static
-../Core/Src/stm32_spi_link.c:77:6:send_packet_to_pi	16	static
-../Core/Src/stm32_spi_link.c:100:6:HAL_SPI_TxRxCpltCallback	24	static
-../Core/Src/stm32_spi_link.c:112:6:HAL_SPI_ErrorCallback	16	static
+../Core/Src/stm32_spi_link.c:42:6:process_packet	16	static
+../Core/Src/stm32_spi_link.c:60:6:process_text	24	static
+../Core/Src/stm32_spi_link.c:71:6:process_config	16	static
+../Core/Src/stm32_spi_link.c:80:6:send_packet_to_pi	16	static
+../Core/Src/stm32_spi_link.c:103:6:HAL_SPI_TxRxCpltCallback	24	static
+../Core/Src/stm32_spi_link.c:115:6:HAL_SPI_ErrorCallback	16	static
