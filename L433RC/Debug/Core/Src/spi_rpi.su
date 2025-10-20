@@ -1,0 +1,7 @@
+../Core/Src/spi_rpi.c:10:6:rpi_init	16	static
+../Core/Src/spi_rpi.c:17:6:rpi_transmit	16	static
+../Core/Src/spi_rpi.c:26:6:rpi_receive	16	static
+../Core/Src/spi_rpi.c:31:6:rpi_printf	112	static
+../Core/Src/spi_rpi.c:41:6:rpi_is_awake	16	static
+../Core/Src/spi_rpi.c:49:6:rpi_wake	8	static
+../Core/Src/spi_rpi.c:53:6:rpi_sleep	8	static

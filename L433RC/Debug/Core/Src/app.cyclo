@@ -1,0 +1,10 @@
+../Core/Src/app.c:25:6:app_init	1
+../Core/Src/app.c:34:6:gpio_int_cb	3
+../Core/Src/app.c:104:10:adc_read_channel_blocking	1
+../Core/Src/app.c:115:6:startup	5
+../Core/Src/app.c:136:6:error	2
+../Core/Src/app.c:152:6:resistance_tests	3
+../Core/Src/app.c:172:6:voltage_tests	4
+../Core/Src/app.c:190:6:flashing	3
+../Core/Src/app.c:213:6:esc_setup	5
+../Core/Src/app.c:242:6:spin	5

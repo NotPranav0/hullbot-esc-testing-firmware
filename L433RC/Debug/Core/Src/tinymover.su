@@ -1,0 +1,15 @@
+../Core/Src/tinymover.c:11:6:tm_init	16	static
+../Core/Src/tinymover.c:40:6:HAL_CAN_RxFifo0MsgPendingCallback	16	static
+../Core/Src/tinymover.c:49:6:can_send_frame	16	static
+../Core/Src/tinymover.c:60:6:tm_set_gains	16	static
+../Core/Src/tinymover.c:67:6:tm_set_vel_inc	16	static
+../Core/Src/tinymover.c:73:6:tm_set_limits	16	static
+../Core/Src/tinymover.c:80:27:tm_get_encoder_config	24	static
+../Core/Src/tinymover.c:91:6:tm_set_encoder_config	16	static
+../Core/Src/tinymover.c:98:6:tm_set_motor_config	16	static
+../Core/Src/tinymover.c:106:6:tm_set_state	16	static
+../Core/Src/tinymover.c:113:25:tm_get_state	16	static
+../Core/Src/tinymover.c:123:6:tm_save_config	8	static
+../Core/Src/tinymover.c:128:6:tm_set_vel_setpoint	16	static
+../Core/Src/tinymover.c:135:7:tm_get_encoder_estimates	16	static
+../Core/Src/tinymover.c:144:6:float32_to_4_byte_array	16	static
