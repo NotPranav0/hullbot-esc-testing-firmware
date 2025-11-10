@@ -1,0 +1,12 @@
+../Core/Src/lcd.c:6:6:lcd_init	1
+../Core/Src/lcd.c:17:6:lcd_write_byte	1
+../Core/Src/lcd.c:28:6:lcd_write_string	2
+../Core/Src/lcd.c:35:6:lcd_prefix	1
+../Core/Src/lcd.c:40:6:lcd_display_on	1
+../Core/Src/lcd.c:45:6:lcd_display_off	1
+../Core/Src/lcd.c:51:6:lcd_set_cursor	1
+../Core/Src/lcd.c:57:6:lcd_home	1
+../Core/Src/lcd.c:62:6:lcd_clear_screen	1
+../Core/Src/lcd.c:68:6:lcd_set_contrast	1
+../Core/Src/lcd.c:74:6:lcd_set_brightness	1
+../Core/Src/lcd.c:80:6:lcd_firmware	1

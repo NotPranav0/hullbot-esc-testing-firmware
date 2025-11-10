@@ -31,7 +31,8 @@ Core/Src/app.o: ../Core/Src/app.c ../Core/Inc/app.h ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h \
- ../Core/Inc/tinymover.h ../Core/Inc/esc.h ../Core/Inc/spi_rpi.h
+ ../Core/Inc/tinymover.h ../Core/Inc/esc.h ../Core/Inc/rpi_spi_link.h \
+ ../Core/Inc/meas_config.h
 ../Core/Inc/app.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
@@ -68,4 +69,5 @@ Core/Src/app.o: ../Core/Src/app.c ../Core/Inc/app.h ../Core/Inc/main.h \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h:
 ../Core/Inc/tinymover.h:
 ../Core/Inc/esc.h:
-../Core/Inc/spi_rpi.h:
+../Core/Inc/rpi_spi_link.h:
+../Core/Inc/meas_config.h:

@@ -1,0 +1,38 @@
+#include "app.h"
+#include "adc.h"
+#include "rpi_spi_link.h"
+#include "button.h"
+#include "stm32l4xx_hal.h"
+
+static ADC_HandleTypeDef* h_adc;
+static CAN_HandleTypeDef* h_can;
+static SPI_HandleTypeDef* h_spi;
+
+bool pending_spi_packet = false;
+
+void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef* spi)
+{
+	h_adc = adc;
+	h_can = can;
+	h_spi = spi;
+	link_init(spi, &pending_spi_packet);
+	adc_init(adc);
+	app_main();
+}
+
+void app_main(void) {
+	while(1) {
+		Press_Type_t press_type = PRESS_TYPE_NONE;
+
+		while(press_type == PRESS_TYPE_NONE) {
+			press_type = WaitFor_Button_Press();
+		}
+
+		if (press_type == PRESS_TYPE_SHORT) {
+
+		} else if (press_type == PRESS_TYPE_LONG) {
+
+		}
+	}
+}
+

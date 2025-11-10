@@ -1,0 +1,113 @@
+#include <string.h>
+#include "lcd.h"
+
+static I2C_HandleTypeDef* h_i2c;
+
+void lcd_init(I2C_HandleTypeDef* i2c) {
+	h_i2c = i2c;
+
+    // Wait for display to power ON
+    HAL_Delay(NHD_STARTUP_DELAY);
+
+    lcd_clear_screen();
+    lcd_set_contrast(40);
+    lcd_set_brightness(7);
+}
+/**
+ * @brief Write a single data byte to the display.
+ * @note  The original Arduino driver sends one byte per I2C transaction
+ * (START -> ADDR -> DATA -> STOP). We replicate that here.
+ */
+void lcd_write_byte(uint8_t data) {
+    uint8_t pData[1];
+    pData[0] = data;
+
+    uint16_t dev_addr = I2C_ADDR << 1;
+
+    HAL_I2C_Master_Transmit(h_i2c, dev_addr, pData, 1, NHD_I2C_TIMEOUT);
+
+    HAL_Delay(10);
+}
+
+/**
+ * @brief Write a null-terminated string to the display.
+ */
+void lcd_write_string(char* str) {
+    // Iterate through data until null terminator is found.
+    while (*str != '\0') {
+    	lcd_write_byte((uint8_t)*str);
+        str++;
+    }
+}
+
+/**
+ * @brief Send the command prefix byte (0xFE).
+ */
+void lcd_prefix() {
+    lcd_write_byte(0xFE);
+}
+
+/**
+ * @brief Turn the display ON.
+ */
+void lcd_display_on() {
+    lcd_prefix();
+    lcd_write_byte(0x41);
+}
+
+/**
+ * @brief Turn the display OFF.
+ */
+void lcd_display_off() {
+	lcd_prefix();
+	lcd_write_byte(0x42);
+}
+
+/**
+ * @brief Set the display cursor position via DDRAM address.
+ */
+void lcd_set_cursor(uint8_t position) {
+	lcd_prefix();
+	lcd_write_byte(0x45);
+	lcd_write_byte(position);
+}
+
+/**
+ * @brief Move the cursor to line 1, column 1.
+ */
+void lcd_home() {
+	lcd_prefix();
+    lcd_write_byte(0x46);
+}
+
+/**
+ * @brief Clear the display screen.
+ */
+void lcd_clear_screen() {
+	lcd_prefix();
+	lcd_write_byte(0x51);
+	HAL_Delay(2);
+}
+
+/**
+ * @brief Set the display's contrast.
+ */
+void lcd_set_contrast(uint8_t contrast) {
+	lcd_prefix();
+	lcd_write_byte(0x52);
+	lcd_write_byte(contrast);
+}
+
+/**
+ * @brief Set the display's brightness.
+ */
+void lcd_set_brightness(uint8_t brightness) {
+	lcd_prefix();
+	lcd_write_byte(0x53);
+	lcd_write_byte(brightness);
+}
+
+void lcd_firmware() {
+	lcd_prefix();
+	lcd_write_byte(0x70);
+}

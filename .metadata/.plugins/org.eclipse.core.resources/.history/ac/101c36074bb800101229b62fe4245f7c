@@ -1,0 +1,25 @@
+/*
+ * app.c
+ *
+ *  Created on: Nov 3, 2025
+ *      Author: pranav.budhwar
+ */
+
+
+#include "app.h"
+#include "main.h"
+
+void app_init(void) {
+	app_main();
+}
+
+void app_main(void) {
+	GPIO_PinState prev = GPIO_PIN_SET;
+	GPIO_PinState curr = HAL_GPIO_ReadPin(USER_BTN_GPIO_Port, USER_BTN_Pin);
+	while(1) {
+		if (curr != prev) {
+			HAL_GPIO_TogglePin(USER_LED_GPIO_Port, USER_LED_Pin);
+		}
+		prev = curr;
+	}
+}

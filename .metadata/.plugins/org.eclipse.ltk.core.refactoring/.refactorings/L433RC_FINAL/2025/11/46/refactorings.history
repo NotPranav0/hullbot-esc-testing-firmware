@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;L433RC_FINAL/Core/Inc/meas_config.h&apos; to &apos;config.h&apos;" description="Rename resource &apos;meas_config.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Inc/meas_config.h" name="config.h" stamp="1762742715573" updateReferences="true"/>
+</session>

@@ -1,0 +1,10 @@
+09:27:41 **** Incremental Build of configuration Debug for project L433RC_BLINK ****
+make -j12 all 
+arm-none-eabi-size  L433RC_BLINK.elf 
+   text	   data	    bss	    dec	    hex	filename
+   6200	     12	   1572	   7784	   1e68	L433RC_BLINK.elf
+Finished building: default.size.stdout
+ 
+
+09:27:41 Build Finished. 0 errors, 0 warnings. (took 374ms)
+

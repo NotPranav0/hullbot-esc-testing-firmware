@@ -1,0 +1,114 @@
+#ifndef LCD_H
+#define LCD_H
+
+
+#include "stm32l4xx_hal.h"
+
+#define NHD_STARTUP_DELAY 	500
+#define NHD_I2C_TIMEOUT   	10
+#define I2C_ADDR 			0x28
+
+
+
+
+/**
+ * @brief Initialize the LCD display.
+ * @note  The I2C peripheral (e.g., I2C1) MUST be initialized by the user
+ * (e.g., via MX_I2C1_Init()) BEFORE calling this function.
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @param hi2c Pointer to the initialized HAL I2C_HandleTypeDef.
+ * @param slave_addr_7bit The 7-bit I2C slave address of the display.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_init(I2C_HandleTypeDef* i2c);
+
+/**
+ * @brief Write a single data byte to the display (e.g., a character).
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @param data The byte of data to write.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_write_byte(uint8_t data);
+
+/**
+ * @brief Write a null-terminated string to the display.
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @param str Pointer to the character string.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_write_string(char* str);
+
+/**
+ * @brief Send the command prefix byte (0xFE).
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_prefix();
+
+/**
+ * @brief Turn the display ON.
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_display_on();
+
+/**
+ * @brief Turn the display OFF.
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_display_off();
+
+/**
+ * @brief Set the display cursor position via DDRAM address.
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @param position Desired DDRAM address.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_set_cursor(uint8_t position);
+
+/**
+ * @brief Move the cursor to line 1, column 1.
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_home();
+
+/**
+ * @brief Clear the display screen.
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_clear_screen();
+
+/**
+ * @brief Set the display's contrast.
+ * @note  0x00 <= contrast <= 0x32 (50). Default: 0x28 (40).
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @param contrast Desired contrast setting.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_set_contrast(uint8_t contrast);
+
+/**
+ * @brief Set the display's brightness.
+ * @note  0x01 (OFF) <= brightness <= 0x08 (100%).
+ *
+ * @param h_lcd Pointer to the lcd_I2C_HandleTypedef structure.
+ * @param brightness Desired brightness setting.
+ * @return void HAL_OK on success, HAL_ERROR on failure.
+ */
+void lcd_SetBrightness(uint8_t brightness);
+
+
+#endif /* LCD_H */

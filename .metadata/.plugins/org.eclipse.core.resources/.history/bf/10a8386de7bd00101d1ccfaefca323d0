@@ -1,0 +1,85 @@
+#include "adc.h"
+#include "stm32l4xx_hal.h"
+
+static ADC_HandleTypeDef* h_adc;
+
+#define ADC_BITS 12
+#define MAX_VOLTS 3.3
+#define MAX_ADC_RAW_VAL ((1 << ADC_BITS) - 1)
+
+float raw_to_float(uint32_t raw) {
+	float scalar = (float)MAX_VOLTS/(float)MAX_ADC_RAW_VAL;
+	return (float)raw * scalar;
+}
+
+const size_t NUM_RESISTANCE_CHANNELS = 9;
+uint32_t adc_channels_resistance[] = {
+	ADC_CHANNEL_13, 	//P1V2
+	ADC_CHANNEL_12, 	//P1V8
+	ADC_CHANNEL_8,  	//P3V3_A
+	ADC_CHANNEL_10, 	//P3V3_IO
+	ADC_CHANNEL_6,  	//P5V
+	ADC_CHANNEL_2,  	//P10V
+	ADC_CHANNEL_3,  	//PVMAIN
+	ADC_CHANNEL_15,  	//SWD
+	ADC_CHANNEL_16   	//CAN
+};
+
+const size_t NUM_VOLTAGE_CHANNELS = 7;
+uint32_t adc_channels_voltage[] = {
+	ADC_CHANNEL_14, 	//P1V2
+	ADC_CHANNEL_9,  	//P1V8
+	ADC_CHANNEL_5,  	//P3V3_A
+	ADC_CHANNEL_11, 	//P3V3_IO
+	ADC_CHANNEL_7,  	//P5V
+	ADC_CHANNEL_1,  	//P10V
+	ADC_CHANNEL_4  		//PVMAIN
+};
+
+char *net_names[] = {
+	"P1V2",
+	"P1V8V",
+	"P3V3_A",
+	"P3V3_IO",
+	"P5V",
+	"P10V",
+	"PVMAIN",
+	"SWD",
+	"CAN"
+};
+
+void adc_init(ADC_HandleTypeDef* adc) {
+	h_adc = adc;
+
+	HAL_ADCEx_Calibration_Start(h_adc, ADC_SINGLE_ENDED);
+}
+
+uint32_t adc_read_channel_blocking(uint32_t channel)
+{
+	ADC_ChannelConfTypeDef sConfig = {0};
+	sConfig.Channel = channel;
+	sConfig.Rank = ADC_REGULAR_RANK_1;
+	sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
+	sConfig.SingleDiff = ADC_SINGLE_ENDED;
+	sConfig.OffsetNumber = ADC_OFFSET_NONE;
+	sConfig.Offset = 0;
+	HAL_ADC_ConfigChannel(h_adc, &sConfig);
+
+	HAL_ADC_Start(h_adc);
+	HAL_ADC_PollForConversion(h_adc, HAL_MAX_DELAY);
+	uint32_t raw = HAL_ADC_GetValue(h_adc);
+	HAL_ADC_Stop(h_adc);
+
+	return raw;
+}
+
+void adc_resistance_tests() {
+	float measurements[NUM_RESISTANCE_CHANNELS];
+	for (int net = 0; net < NUM_RESISTANCE_CHANNELS; net++) {
+		uint32_t raw_val = adc_read_channel_blocking(adc_channels_resistance[net]);
+		measurements[net] = raw_to_float(raw_val);
+	}
+}
+
+
+

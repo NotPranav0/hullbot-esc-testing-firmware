@@ -1,0 +1,28 @@
+#include "app.h"
+#include "lcd.h"
+
+#include "stm32l4xx_hal.h"
+
+
+static I2C_HandleTypeDef* h_i2c;
+
+
+void lcd_test() {
+	lcd_write_string("line1");
+	lcd_set_cursor(LINE2_COL1);
+	lcd_write_string("line2");
+}
+
+void app_init(I2C_HandleTypeDef* i2c) {
+
+	h_i2c = i2c;
+	lcd_init(i2c);
+	lcd_test();
+	app_main();
+}
+
+void resistance_tests();
+
+void app_main(void) {}
+
+

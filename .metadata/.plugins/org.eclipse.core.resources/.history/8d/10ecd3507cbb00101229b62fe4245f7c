@@ -1,0 +1,34 @@
+#include "app.h"
+#include "adc.h"
+#include "rpi_spi_link.h"
+#include "button.h"
+#include "stm32l4xx_hal.h"
+
+static ADC_HandleTypeDef* h_adc;
+static CAN_HandleTypeDef* h_can;
+static SPI_HandleTypeDef* h_spi;
+
+bool pending_spi_packet = false;
+
+void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef* spi)
+{
+	h_adc = adc;
+	h_can = can;
+	h_spi = spi;
+	link_init(spi, &pending_spi_packet);
+	adc_init(adc);
+	app_main();
+}
+
+void app_main(void) {
+	while (1) {
+		if (rpi_is_awake()) {
+			HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
+		} else {
+			HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
+		}
+		HAL_Delay(500);
+	}
+
+}
+

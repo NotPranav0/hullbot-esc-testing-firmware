@@ -1,0 +1,8 @@
+../Core/Src/esc.c:39:15:invert	2
+../Core/Src/esc.c:47:6:esc_is_connected	1
+../Core/Src/esc.c:51:6:esc_set_1v2_source	1
+../Core/Src/esc.c:55:6:esc_set_voltage_net_mode	3
+../Core/Src/esc.c:62:6:esc_set_all_voltage_nets_mode	2
+../Core/Src/esc.c:68:6:esc_set_swd_mode	3
+../Core/Src/esc.c:78:6:esc_set_can_mode	3
+../Core/Src/esc.c:88:6:esc_set_pwr	1

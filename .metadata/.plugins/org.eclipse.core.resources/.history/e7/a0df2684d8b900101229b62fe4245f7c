@@ -1,0 +1,13 @@
+/*
+ * rpi_spi_link.h
+ *
+ *  Created on: Nov 5, 2025
+ *      Author: pranav.budhwar
+ */
+
+#ifndef INC_RPI_SPI_LINK_H_
+#define INC_RPI_SPI_LINK_H_
+
+
+
+#endif /* INC_RPI_SPI_LINK_H_ */

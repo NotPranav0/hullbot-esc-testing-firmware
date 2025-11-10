@@ -1,0 +1,13 @@
+/*
+ * app.c
+ *
+ *  Created on: Nov 3, 2025
+ *      Author: pranav.budhwar
+ */
+
+
+#include "app.h"
+
+void app_init() {
+	return;
+}

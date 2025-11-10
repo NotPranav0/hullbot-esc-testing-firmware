@@ -1,0 +1,155 @@
+#include <string.h>
+#include "lcd.h"
+
+static I2C_HandleTypeDef* h_i2c;
+
+void lcd_init(I2C_HandleTypeDef* i2c) {
+	h_i2c = i2c;
+
+    // Wait for display to power ON
+    HAL_Delay(NHD_STARTUP_DELAY);
+
+    // Clear the screen on init
+    return lcd_clear_screen();
+
+
+/**
+ * @brief Write a single data byte to the display.
+ * @note  The original Arduino driver sends one byte per I2C transaction
+ * (START -> ADDR -> DATA -> STOP). We replicate that here.
+ */
+void lcd_write_byte(uint8_t data) {
+    uint8_t pData[1];
+    pData[0] = data;
+
+    // The HAL function expects the 7-bit address left-shifted by 1
+    uint16_t dev_addr = I2C_ADDR << 1;
+
+    // Transmit 1 byte of data
+    HAL_I2C_Master_Transmit(h_i2c, dev_addr, pData, 1, NHD_I2C_TIMEOUT);
+
+}
+
+/**
+ * @brief Write a null-terminated string to the display.
+ */
+void lcd_write_string(, char* str)
+{
+    void status = HAL_OK;
+
+    // Iterate through data until null terminator is found.
+    while (*str != '\0')
+    {
+        status = lcd_Write(h_lcd, (uint8_t)*str);
+        if (status != HAL_OK)
+        {
+            // Stop on I2C error
+            return status;
+        }
+        str++; // Increment pointer.
+    }
+
+    return status;
+}
+
+/**
+ * @brief Send the command prefix byte (0xFE).
+ */
+void lcd_Prefix()
+{
+    return lcd_Write(h_lcd, 0xFE);
+}
+
+/**
+ * @brief Turn the display ON.
+ */
+void lcd_DisplayON()
+{
+    void status = lcd_Prefix(h_lcd);
+    if (status != HAL_OK) return status;
+    return lcd_Write(h_lcd, 0x41);
+}
+
+/**
+ * @brief Turn the display OFF.
+ */
+void lcd_DisplayOFF()
+{
+    void status = lcd_Prefix(h_lcd);
+    if (status != HAL_OK) return status;
+    return lcd_Write(h_lcd, 0x42);
+}
+
+/**
+ * @brief Set the display cursor position via DDRAM address.
+ */
+void lcd_SetCursor(, uint8_t position)
+{
+    void status = lcd_Prefix(h_lcd);
+    if (status != HAL_OK) return status;
+    return lcd_Write(h_lcd, 0x45);
+}
+
+/**
+ * @brief Move the cursor to line 1, column 1.
+ */
+void lcd_Home()
+{
+    void status = lcd_Prefix(h_lcd);
+    if (status != HAL_OK) return status;
+    return lcd_Write(h_lcd, 0x46);
+}
+
+/**
+ * @brief Clear the display screen.
+ */
+void lcd_ClearScreen()
+{
+    void status = lcd_Prefix(h_lcd);
+    if (status != HAL_OK) return status;
+
+    status = lcd_Write(h_lcd, 0x51);
+
+    // Add 2ms delay as in original code
+    HAL_Delay(2);
+
+    return status;
+}
+
+/**
+ * @brief Set the display's contrast.
+ */
+void lcd_SetContrast(, uint8_t contrast)
+{
+    void status = lcd_Prefix(h_lcd);
+    if (status != HAL_OK) return status;
+
+    status = lcd_Write(h_lcd, 0x52);
+    if (status != HAL_OK) return status;
+
+    return lcd_Write(h_lcd, contrast);
+}
+
+/**
+ * @brief Set the display's brightness.
+ */
+void lcd_SetBrightness(, uint8_t brightness)
+{
+    void status = lcd_Prefix(h_lcd);
+    if (status != HAL_OK) return status;
+
+    status = lcd_Write(h_lcd, 0x53);
+    if (status != HAL_OK) return status;
+
+    return lcd_Write(h_lcd, brightness);
+}
+
+/**
+ * @brief Turn the underline cursor ON.
+ */
+void lcd_UnderlineCursorON()
+{
+    void status = lcd_Prefix(h_lcd);
+    if (status != HAL_OK) return status;
+    return lcd_Write(h_lcd, 0x47);
+}

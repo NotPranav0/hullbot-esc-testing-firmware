@@ -1,0 +1,16 @@
+#ifndef INC_BUTTON_H_
+#define INC_BUTTON_H_
+
+
+#define DEBOUNCE_TIME   50
+#define LONG_PRESS_TIME 1000
+
+typedef enum {
+    PRESS_TYPE_NONE,
+    PRESS_TYPE_SHORT,
+    PRESS_TYPE_LONG
+} Press_Type_t;
+
+Press_Type_t WaitFor_Button_Press(void);
+
+#endif /* INC_BUTTON_H_ */

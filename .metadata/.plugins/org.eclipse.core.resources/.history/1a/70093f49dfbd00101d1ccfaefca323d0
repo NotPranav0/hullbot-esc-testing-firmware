@@ -1,0 +1,18 @@
+#ifndef INC_MEAS_CONFIG_H_
+#define INC_MEAS_CONFIG_H_
+
+#include <stdint.h>
+
+// no padding bytes.
+#pragma pack(push, 1)
+
+//example config struct (must match rpi definition)
+typedef struct {
+	float P1V2_R_THRESHOLD;
+    float P1V8_R_THRESHOLD;
+} MeasConfig_t;
+
+#pragma pack(pop)
+
+
+#endif /* INC_MEAS_CONFIG_H_ */

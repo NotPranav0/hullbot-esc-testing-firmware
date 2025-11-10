@@ -1,0 +1,9 @@
+#include "config.h"
+
+Config_t config;
+
+Config_t* config_init() {
+
+}
+
+

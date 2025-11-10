@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;L433RC_INTEGRATED/Core/Src/stm32_spi_link.c&apos; to &apos;rpi_spi_link.c&apos;" description="Rename resource &apos;stm32_spi_link.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Src/stm32_spi_link.c" name="rpi_spi_link.c" stamp="1762300079486" updateReferences="true"/>
+</session>

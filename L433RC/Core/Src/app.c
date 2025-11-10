@@ -5,7 +5,7 @@
 #include "app.h"
 #include "tinymover.h"
 #include "esc.h"
-#include "spi_rpi.h"
+#include "rpi_spi_link.h"
 
 static ADC_HandleTypeDef* h_adc;
 static CAN_HandleTypeDef* h_can;
@@ -21,29 +21,24 @@ const uint8_t ESC_CAN_ID = 1;
 #define ONE_POINT_TWO_VOLTS 1489
 #define POINT_ONE_VOLTS 125
 
+const uint8_t ADC_BITS = 12;
+const float MAX_VOLTS = 3.3;
+const uint16_t MAX_ADC_VAL = (1 << ADC_BITS) - 1;
+
+bool packet_recieved;
 
 void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef* spi) 
 {
 	h_adc = adc;
 	h_can = can;
 	h_spi = spi;
-	HAL_ADCEx_Calibration_Start(h_adc, ADC_SINGLE_ENDED);
+	link_init(spi, &packet_recieved);
+	if (HAL_ADCEx_Calibration_Start(h_adc, ADC_SINGLE_ENDED) != HAL_OK)
+	{
+		Error_Handler();
+	}
 	startup();
 }
-
-void gpio_int_cb(uint16_t GPIO_Pin) 
-{
-	if (GPIO_Pin == OVER_TEMP_Pin) 
-	{
-		error("over_temp");
-	}
-
-	if (GPIO_Pin == OVER_CURRENT_Pin) 
-	{
-		error("over_current");
-	}
-}
-
 
 const size_t NUM_RESISTANCE_CHANNELS = 9;
 uint32_t adc_channels_resistance[] = {
@@ -103,51 +98,63 @@ uint32_t tolerances[] = {
 
 uint32_t adc_read_channel_blocking(uint32_t channel) 
 {
-	ADC_ChannelConfTypeDef ADC_CH_Cfg = {0};
-	ADC_CH_Cfg.Channel = channel;
-	HAL_ADC_ConfigChannel(h_adc, &ADC_CH_Cfg);
+	ADC_ChannelConfTypeDef sConfig = {0};
+	sConfig.Channel = channel;
+	sConfig.Rank = ADC_REGULAR_RANK_1;
+	sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
+	sConfig.SingleDiff = ADC_SINGLE_ENDED;
+	sConfig.OffsetNumber = ADC_OFFSET_NONE;
+	sConfig.Offset = 0;
+	if (HAL_ADC_ConfigChannel(h_adc, &sConfig) != HAL_OK)
+	{
+		Error_Handler();
+	}
 	HAL_ADC_Start(h_adc);
-	HAL_ADC_PollForConversion(h_adc, 10);
-	return HAL_ADC_GetValue(h_adc);
+	if (HAL_ADC_PollForConversion(h_adc, HAL_MAX_DELAY) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	uint32_t raw = HAL_ADC_GetValue(h_adc);
+	HAL_ADC_Stop(h_adc);
+	return raw;
 }
-
 
 void startup() 
 {
 	esc_set_1v2_source(FLOATING);
 	esc_set_pwr(FLOATING);
 
-	if (!rpi_is_awake()) {
-		// TODO: wait for single button press
-		rpi_wake();
-		while (!rpi_is_awake()) {}
-	}
-	
-	if (!esc_is_connected()) 
-	{
-		rpi_printf("connect esc\n");
-		while (!esc_is_connected()) {}
-	}
+//	if (!rpi_is_awake()) {
+//		// TODO: wait for single button press
+//		rpi_wake();
+//		while (!rpi_is_awake()) {}
+//	}
+//
+//	if (!esc_is_connected())
+//	{
+//		rpi_printf("connect esc\n");
+//		while (!esc_is_connected()) {}
+//	}
 
 	// run resistance tests
 	resistance_tests();
 }
 
-void error(const char* msg, ...)
-{
-		esc_set_1v2_source(FLOATING);
-		esc_set_pwr(FLOATING);
-		char error_string[256];
-		va_list args;
-		va_start(args, msg);
-		vsnprintf(error_string, sizeof(error_string), msg, args);
-		va_end(args);
-		rpi_printf("error: %s\n", error_string);
-
-		// wait for esc disconnect
-		while (esc_is_connected()) {}
-		startup();
-}
+//void error(const char* msg, ...)
+//{
+//		esc_set_1v2_source(FLOATING);
+//		esc_set_pwr(FLOATING);
+//		char error_string[256];
+//		va_list args;
+//		va_start(args, msg);
+//		vsnprintf(error_string, sizeof(error_string), msg, args);
+//		va_end(args);
+//		rpi_printf("error: %s\n", error_string);
+//
+//		// wait for esc disconnect
+//		while (esc_is_connected()) {}
+//		startup();
+//}
 
 void resistance_tests() 
 {
@@ -156,116 +163,121 @@ void resistance_tests()
 	esc_set_swd_mode(MEASURING);
 	esc_set_can_mode(MEASURING);
 	esc_set_all_voltage_nets_mode(RESISTANCE);
-
-	for (int net = 0; net < NUM_RESISTANCE_CHANNELS; net++) 
-	{
-		uint32_t val = adc_read_channel_blocking(adc_channels_resistance[net]);
-		if (val < POINT_SIX_VOLTS) 
+	while(1) {
+		uint32_t values[NUM_RESISTANCE_CHANNELS];
+		for (int net = 0; net < NUM_RESISTANCE_CHANNELS; net++)
 		{
-			error("resistance on net %s too low", net_names[net]);
+			uint32_t raw_val = adc_read_channel_blocking(adc_channels_resistance[net]);
+			values[net] = raw_val;
+	//		if (val < POINT_SIX_VOLTS)
+	//		{
+	//			error("resistance on net %s too low", net_names[net]);
+	//		}
 		}
+		send_packet_to_pi(DEBUG_INFO, (uint8_t*)values, sizeof(uint32_t)*NUM_RESISTANCE_CHANNELS);
+		HAL_GPIO_TogglePin(USER_LED_GPIO_Port, USER_LED_Pin);
+		HAL_Delay(1000);
 	}
-
-	voltage_tests();
+	//voltage_tests();
 }
 
-void voltage_tests() 
-{
-	esc_set_1v2_source(FLOATING);
-	esc_set_pwr(CONNECTED);
-	esc_set_all_voltage_nets_mode(VOLTAGE);
-
-	for (int net = 0; net < NUM_VOLTAGE_CHANNELS; net++) 
-	{
-		uint32_t val = adc_read_channel_blocking(adc_channels_voltage[net]);
-		if (val < (expected_voltages[net] - tolerances[net]) || val > (expected_voltages[net] + tolerances[net])) 
-		{
-			error("voltage on net %s out of range", net_names[net]);
-		}
-	}
-
-	flashing();
-}
-
-void flashing() 
-{
-	esc_set_swd_mode(COMMUNICATING);
-
-	rpi_printf("start flashing\n");
-
-	uint8_t rx_msg[16];
-	while (1) 
-	{
-		rpi_receive(rx_msg, 16);
-		if (strncmp(rx_msg, "done", 4) == 0) 
-		{
-			break;
-		} else if (strncmp(rx_msg, "flashing failed", 16) == 0) 
-		{
-			error("flashing failed");
-		}
-		HAL_Delay(10);
-	}
-
-	spin();
-}
-
-void esc_setup() 
-{
-	tm_init(h_can);
-	tm_set_gains(POS_GAIN, VEL_GAIN);
-	tm_set_vel_inc(VEL_INC);
-	tm_set_limits(VEL_LIMIT * TICKS_PER_TURN / 60, CURRENT_LIMIT);
-	tm_set_encoder_config((tinymovr_encoder_config_t){.type = 0, .bandwidth = ENCODER_BANDWIDTH});
-	tm_set_motor_config((tinymovr_motor_config_t){.flags = 0, .pole_pairs = 7, .calibration_constant = CALIBRATION_CURRENT});
-	tm_set_state((tinymovr_state_config_t){.state = CALIBRATE, .mode = 0, .errors = 0});
-
-	//TODO: this is a long time!
-	for (int idx = 0; idx < 1000; idx++) 
-	{
-		tinymovr_state_config_t state = tm_get_state();
-		if (state.state == IDLE) 
-		{
-			break;
-		}
-		HAL_Delay(50);
-	}
-	tinymovr_state_config_t state = tm_get_state();
-	if (state.state != IDLE && state.errors != 0) 
-	{
-		error("calibration failed");
-	}
-	tm_save_config();
-
-}
-
-void spin() 
-{
-	esc_set_can_mode(COMMUNICATING);
-	
-	rpi_printf("starting spin test\n");
-
-	esc_setup();
-
-	tm_set_state((tinymovr_state_config_t){.state = CONTROL, .mode = VELOCITY, .errors = 0});
-	tm_set_vel_setpoint(SPIN_TEST_VEL_SETPOINT);
-
-	float est_vel = tm_get_encoder_estimates();
-	if (est_vel + THRESHOLD < SPIN_TEST_VEL_SETPOINT || est_vel - THRESHOLD > SPIN_TEST_VEL_SETPOINT)
-	{
-		error("spin test failed");
-	}
-
-	tm_set_vel_setpoint(-1*SPIN_TEST_VEL_SETPOINT);
-
-	est_vel = tm_get_encoder_estimates();
-	if (est_vel + THRESHOLD < -1*SPIN_TEST_VEL_SETPOINT || est_vel - THRESHOLD > -1*SPIN_TEST_VEL_SETPOINT)
-	{
-		error("spin test failed");
-	}
-
-	tm_set_vel_setpoint(0);
-	tm_set_state((tinymovr_state_config_t){.state = IDLE, .mode = 0, .errors = 0});
-
-	error("success");
-}
+//void voltage_tests()
+//{
+//	esc_set_1v2_source(FLOATING);
+//	esc_set_pwr(CONNECTED);
+//	esc_set_all_voltage_nets_mode(VOLTAGE);
+//
+//	for (int net = 0; net < NUM_VOLTAGE_CHANNELS; net++)
+//	{
+//		uint32_t val = adc_read_channel_blocking(adc_channels_voltage[net]);
+//		if (val < (expected_voltages[net] - tolerances[net]) || val > (expected_voltages[net] + tolerances[net]))
+//		{
+//			error("voltage on net %s out of range", net_names[net]);
+//		}
+//	}
+//
+//	flashing();
+//}
+//
+//void flashing()
+//{
+//	esc_set_swd_mode(COMMUNICATING);
+//
+//	rpi_printf("start flashing\n");
+//
+//	uint8_t rx_msg[16];
+//	while (1)
+//	{
+//		rpi_receive(rx_msg, 16);
+//		if (strncmp(rx_msg, "done", 4) == 0)
+//		{
+//			break;
+//		} else if (strncmp(rx_msg, "flashing failed", 16) == 0)
+//		{
+//			error("flashing failed");
+//		}
+//		HAL_Delay(10);
+//	}
+//
+//	spin();
+//}
+//
+//void esc_setup()
+//{
+//	tm_init(h_can);
+//	tm_set_gains(POS_GAIN, VEL_GAIN);
+//	tm_set_vel_inc(VEL_INC);
+//	tm_set_limits(VEL_LIMIT * TICKS_PER_TURN / 60, CURRENT_LIMIT);
+//	tm_set_encoder_config((tinymovr_encoder_config_t){.type = 0, .bandwidth = ENCODER_BANDWIDTH});
+//	tm_set_motor_config((tinymovr_motor_config_t){.flags = 0, .pole_pairs = 7, .calibration_constant = CALIBRATION_CURRENT});
+//	tm_set_state((tinymovr_state_config_t){.state = CALIBRATE, .mode = 0, .errors = 0});
+//
+//	//TODO: this is a long time!
+//	for (int idx = 0; idx < 1000; idx++)
+//	{
+//		tinymovr_state_config_t state = tm_get_state();
+//		if (state.state == IDLE)
+//		{
+//			break;
+//		}
+//		HAL_Delay(50);
+//	}
+//	tinymovr_state_config_t state = tm_get_state();
+//	if (state.state != IDLE && state.errors != 0)
+//	{
+//		error("calibration failed");
+//	}
+//	tm_save_config();
+//
+//}
+//
+//void spin()
+//{
+//	esc_set_can_mode(COMMUNICATING);
+//
+//	rpi_printf("starting spin test\n");
+//
+//	esc_setup();
+//
+//	tm_set_state((tinymovr_state_config_t){.state = CONTROL, .mode = VELOCITY, .errors = 0});
+//	tm_set_vel_setpoint(SPIN_TEST_VEL_SETPOINT);
+//
+//	float est_vel = tm_get_encoder_estimates();
+//	if (est_vel + THRESHOLD < SPIN_TEST_VEL_SETPOINT || est_vel - THRESHOLD > SPIN_TEST_VEL_SETPOINT)
+//	{
+//		error("spin test failed");
+//	}
+//
+//	tm_set_vel_setpoint(-1*SPIN_TEST_VEL_SETPOINT);
+//
+//	est_vel = tm_get_encoder_estimates();
+//	if (est_vel + THRESHOLD < -1*SPIN_TEST_VEL_SETPOINT || est_vel - THRESHOLD > -1*SPIN_TEST_VEL_SETPOINT)
+//	{
+//		error("spin test failed");
+//	}
+//
+//	tm_set_vel_setpoint(0);
+//	tm_set_state((tinymovr_state_config_t){.state = IDLE, .mode = 0, .errors = 0});
+//
+//	error("success");
+//}

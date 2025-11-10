@@ -1,0 +1,9 @@
+#ifndef INC_ADC_H_
+#define INC_ADC_H_
+
+void adc_init();
+uint32_t adc_read_channel_blocking(uint32_t channel);
+
+void error(const char* msg, ...);
+
+#endif /* INC_ADC_H_ */

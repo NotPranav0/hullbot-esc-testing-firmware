@@ -1,0 +1,5 @@
+../Core/Src/adc.c:12:7:raw_to_float	24	static
+../Core/Src/adc.c:52:6:adc_init	16	static
+../Core/Src/adc.c:58:10:adc_read_channel_blocking	48	static
+../Core/Src/adc.c:77:6:adc_take_resistance_measurements	32	static
+../Core/Src/adc.c:90:6:adc_take_voltage_measurements	32	static

@@ -1,0 +1,10 @@
+15:32:47 **** Incremental Build of configuration Debug for project L432KC_LCD ****
+make -j12 all 
+arm-none-eabi-size  L432KC_LCD.elf 
+   text	   data	    bss	    dec	    hex	filename
+  14204	     12	   1796	  16012	   3e8c	L432KC_LCD.elf
+Finished building: default.size.stdout
+ 
+
+15:32:47 Build Finished. 0 errors, 0 warnings. (took 381ms)
+

@@ -1,0 +1,28 @@
+#include "app.h"
+#include "lcd.h"
+
+#include "stm32l4xx_hal.h"
+
+
+static I2C_HandleTypeDef* h_i2c;
+
+void app_init(I2C_HandleTypeDef* i2c) {
+	h_i2c = i2c;
+	lcd_init(i2c);
+	app_main();
+}
+
+
+
+void app_main(void) {
+	HAL_Delay(1500);
+	while(1) {
+		HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+		HAL_Delay(500);
+		lcd_firmware();
+		//lcd_set_cursor(LINE1_COL1);
+		//lcd_write_string("hello");
+	}
+}
+
+

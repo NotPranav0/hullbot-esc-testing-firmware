@@ -1,0 +1,100 @@
+#include "app.h"
+#include "adc.h"
+#include "button.h"
+#include "esc.h"
+#include "rpi_spi_link.h"
+
+#include "stm32l4xx_hal.h"
+
+static ADC_HandleTypeDef* h_adc;
+static CAN_HandleTypeDef* h_can;
+static SPI_HandleTypeDef* h_spi;
+
+bool pending_spi_packet = false;
+
+const size_t NUM_RESISTANCE_CHANNELS = 9;
+uint32_t adc_channels_resistance[] = {
+	ADC_CHANNEL_13, 	//P1V2
+	ADC_CHANNEL_12, 	//P1V8
+	ADC_CHANNEL_8,  	//P3V3_A
+	ADC_CHANNEL_10, 	//P3V3_IO
+	ADC_CHANNEL_6,  	//P5V
+	ADC_CHANNEL_2,  	//P10V
+	ADC_CHANNEL_3,  	//PVMAIN
+	ADC_CHANNEL_15,  	//SWD
+	ADC_CHANNEL_16   	//CAN
+};
+
+const size_t NUM_VOLTAGE_CHANNELS = 7;
+uint32_t adc_channels_voltage[] = {
+	ADC_CHANNEL_14, 	//P1V2
+	ADC_CHANNEL_9,  	//P1V8
+	ADC_CHANNEL_5,  	//P3V3_A
+	ADC_CHANNEL_11, 	//P3V3_IO
+	ADC_CHANNEL_7,  	//P5V
+	ADC_CHANNEL_1,  	//P10V
+	ADC_CHANNEL_4  		//PVMAIN
+};
+
+char *net_names[] = {
+	"P1V2",
+	"P1V8V",
+	"P3V3_A",
+	"P3V3_IO",
+	"P5V",
+	"P10V",
+	"PVMAIN",
+	"SWD",
+	"CAN"
+};
+
+void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef* spi)
+{
+	h_adc = adc;
+	h_can = can;
+	h_spi = spi;
+	link_init(spi, &pending_spi_packet);
+	adc_init(adc);
+	app_main();
+	esc_set_pwr(FLOATING);
+	esc_set_1v2_source(FLOATING);
+}
+
+void resistance_tests();
+
+void app_main(void) {
+	while(1) {
+		Press_Type_t press_type = PRESS_TYPE_NONE;
+
+		while(press_type == PRESS_TYPE_NONE) {
+			press_type = WaitFor_Button_Press();
+		}
+
+		if (press_type == PRESS_TYPE_SHORT) {
+			log_to_pi("short press detected");
+			while(1) {
+				resistance_tests();
+				HAL_Delay(500);
+			}
+		} else if (press_type == PRESS_TYPE_LONG) {
+			log_to_pi("long press detected, pi shutting down");
+			rpi_press_power_button();
+		}
+	}
+}
+
+void resistance_tests() {
+	esc_set_pwr(FLOATING);
+	esc_set_1v2_source(CONNECTED);
+	esc_set_swd_mode(MEASURING);
+	esc_set_can_mode(MEASURING);
+	esc_set_all_voltage_nets_mode(RESISTANCE);
+	uint32_t values[NUM_RESISTANCE_CHANNELS];
+	for (int net = 0; net < NUM_RESISTANCE_CHANNELS; net++) {
+		uint32_t raw_val = adc_read_channel_blocking(adc_channels_resistance[net]);
+		values[net] = raw_val;
+	}
+	send_packet_to_pi(DEBUG_INFO, (uint8_t*)values, sizeof(uint32_t)*NUM_RESISTANCE_CHANNELS);
+}
+
+

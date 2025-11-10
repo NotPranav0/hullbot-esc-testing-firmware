@@ -1,10 +1,4 @@
-../Core/Src/app.c:25:6:app_init	24	static
-../Core/Src/app.c:34:6:gpio_int_cb	16	static
-../Core/Src/app.c:104:10:adc_read_channel_blocking	40	static
-../Core/Src/app.c:115:6:startup	8	static
-../Core/Src/app.c:136:6:error	272	static
-../Core/Src/app.c:152:6:resistance_tests	16	static
-../Core/Src/app.c:172:6:voltage_tests	16	static
-../Core/Src/app.c:190:6:flashing	24	static
-../Core/Src/app.c:213:6:esc_setup	40	static
-../Core/Src/app.c:242:6:spin	24	static
+../Core/Src/app.c:30:6:app_init	24	static
+../Core/Src/app.c:99:10:adc_read_channel_blocking	48	static
+../Core/Src/app.c:122:6:startup	8	static
+../Core/Src/app.c:159:6:resistance_tests	48	dynamic

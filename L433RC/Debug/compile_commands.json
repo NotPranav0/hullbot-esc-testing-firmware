@@ -16,8 +16,8 @@
   },
   {
     "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC",
-    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC/Core/Src/spi_rpi.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC/Debug/Core/Src/spi_rpi.o\"",
-    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC/Core/Src/spi_rpi.c"
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC/Core/Src/rpi_spi_link.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC/Debug/Core/Src/rpi_spi_link.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC/Core/Src/rpi_spi_link.c"
   },
   {
     "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC",

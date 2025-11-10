@@ -1,0 +1,11 @@
+#ifndef INC_ADC_H_
+#define INC_ADC_H_
+
+#define ADC_BITS 12
+#define MAX_VOLTS 3.3
+#define MAX_ADC_RAW_VAL ((1 << ADC_BITS) - 1)
+
+void adc_init(ADC_HandleTypeDef* adc);
+uint32_t adc_read_channel_blocking(uint32_t channel);
+
+#endif /* INC_ADC_H_ */

@@ -1,0 +1,101 @@
+#ifndef INC_APP_H_
+#define INC_APP_H_
+
+#include "main.h"
+#include "stm32l4xx_hal.h"
+#include <stdint.h>
+
+void app_init(ADC_HandleTypeDef* h_adc, CAN_HandleTypeDef* h_can, SPI_HandleTypeDef* h_spi);
+
+// states
+void startup();
+void resistance_tests();
+void voltage_tests();
+void flashing();
+void spin();
+
+
+/*
+GPIO:
+
+EN_1V2_Pin 
+EN_1V2_GPIO_Port
+
+=====Voltage Nets=====
+
+ESC_P1V2_SEL_Pin 
+ESC_P1V2_SEL_GPIO_Port
+LOW: ADC14 (V)
+HIGH: ADC13 (R)
+
+ESC_P1V8_SEL_Pin 
+ESC_P1V8_SEL_GPIO_Port 
+LOW: ADC12 (R)
+HIGH: ADC9 (V)
+
+ESC_P3V3_A_SEL_Pin 
+ESC_P3V3_A_SEL_GPIO_Port
+LOW: ADC8 (R)
+HIGH: ADC5 (V)
+
+ESC_P3V3_IO_SEL_Pin 
+ESC_P3V3_IO_SEL_GPIO_Port
+LOW: ADC11 (V)
+HIGH: ADC10 (R)
+
+ESC_P5V_SEL_Pin 
+ESC_P5V_SEL_GPIO_Port
+LOW: ADC7 (V)
+HIGH: ADC6 (R)
+
+ESC_P10V_SEL_Pin 
+ESC_P10V_SEL_GPIO_Port
+LOW: ADC1 (V)
+HIGH: ADC2 (R)
+
+ESC_PVMAIN_SEL_Pin 
+ESC_PVMAIN_SEL_GPIO_Port
+LOW: ADC3 (R)
+HIGH: ADC4 (V)
+
+=====Power=====
+
+ESC_PWR_SEL_Pin 
+ESC_PWR_SEL_GPIO_Port
+LOW: Floating
+HIGH: Connected
+
+=====Serial Wire Debug=====
+
+ESC_SWDIO_SEL_Pin 
+ESC_SWDIO_SEL_GPIO_Port
+LOW: STLink
+HIGH: ADC16
+
+ESC_SWCLK_SEL_Pin 
+ESC_SWCLK_SEL_GPIO_Port
+LOW: GND
+HIGH: STLink
+
+=====CAN=====
+
+ESC_CAN_N_SEL_Pin 
+ESC_CAN_N_SEL_GPIO_Port
+LOW: GND
+HIGH: XCVR
+
+ESC_CAN_P_SEL_Pin 
+ESC_CAN_P_SEL_GPIO_Port
+LOW: XCVR
+HIGH: ADC15
+=====User/Debug=====
+
+USER_BTN_Pin 
+USER_BTN_GPIO_Port
+
+USER_LED_Pin 
+USER_LED_GPIO_Port
+*/
+
+
+#endif /* INC_APP_H_ */

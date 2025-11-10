@@ -1,0 +1,7 @@
+#ifndef INC_ADC_H_
+#define INC_ADC_H_
+
+
+uint32_t adc_read_channel_blocking(uint32_t channel);
+
+#endif /* INC_ADC_H_ */

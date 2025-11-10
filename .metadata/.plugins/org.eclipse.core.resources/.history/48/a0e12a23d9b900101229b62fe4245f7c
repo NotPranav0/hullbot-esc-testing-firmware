@@ -1,0 +1,48 @@
+#include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
+
+#include "spi_rpi.h"
+#include "app.h"
+
+SPI_HandleTypeDef* h_spi;
+
+void rpi_init(SPI_HandleTypeDef* spi) 
+{
+    h_spi = spi;
+
+    HAL_GPIO_WritePin(SPI_INT_GPIO_Port, SPI_INT_Pin, GPIO_PIN_RESET);
+}
+
+void rpi_transmit(uint8_t* data, uint16_t size) 
+{
+    // toggle pin to signal pi
+    HAL_GPIO_WritePin(SPI_INT_GPIO_Port, SPI_INT_Pin, GPIO_PIN_SET);
+    HAL_Delay(10);
+    HAL_GPIO_WritePin(SPI_INT_GPIO_Port, SPI_INT_Pin, GPIO_PIN_RESET);
+    HAL_SPI_Transmit(h_spi, data, size, 1000);
+}
+
+void rpi_receive(uint8_t* data, uint16_t size)
+{
+    HAL_SPI_Receive(h_spi, data, size, 1000);
+}
+
+void rpi_printf(const char* fmt, ...)
+{
+    char buffer[100];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buffer, sizeof(buffer), fmt, args);
+    va_end(args);
+    rpi_transmit((uint8_t*)buffer, strlen(buffer));
+}
+
+bool rpi_is_awake() 
+{
+    uint8_t resp[4];
+    rpi_transmit((uint8_t*)"ping", 5);
+    rpi_receive(resp, sizeof(resp));
+    return (strncmp((char*)resp, "pong", 4) == 0);
+}
+

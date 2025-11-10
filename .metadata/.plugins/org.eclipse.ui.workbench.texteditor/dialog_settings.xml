@@ -3,6 +3,7 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="true"/>
 	<list key="replacehistory">
+		<item value="h_i2c"/>
 		<item value="float"/>
 		<item value="h_spi1"/>
 		<item value="read_attempts"/>
@@ -14,6 +15,11 @@
 		<item value="HAL_Delay"/>
 	</list>
 	<list key="searchhistory">
+		<item value="_hi2c"/>
+		<item value="HAL_SPI_AB"/>
+		<item value="abort"/>
+		<item value="STOP"/>
+		<item value="Pause"/>
 		<item value="send_packet_to_pi"/>
 		<item value="spi_int_assert"/>
 		<item value="RxCpltCallback"/>
@@ -24,11 +30,6 @@
 		<item value="error"/>
 		<item value="printf"/>
 		<item value="float32_t"/>
-		<item value="h_spi"/>
-		<item value="link_send_string"/>
-		<item value="spi_int_deassert"/>
-		<item value="hspi1"/>
-		<item value="(V)"/>
 	</list>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item key="selection" value="_goIdleState"/>

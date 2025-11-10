@@ -1,0 +1,83 @@
+#include <string.h>
+#include "lcd.h"
+
+static I2C_HandleTypeDef* h_i2c;
+
+void lcd_init(I2C_HandleTypeDef* i2c) {
+	h_i2c = i2c;
+
+    // Wait for display to power ON
+    HAL_Delay(NHD_STARTUP_DELAY);
+
+    lcd_clear_screen();
+    lcd_set_contrast(40);
+    lcd_set_brightness(6);
+}
+
+void lcd_write_byte(uint8_t data) {
+    uint8_t pData[1];
+    pData[0] = data;
+
+    uint16_t dev_addr = I2C_ADDR << 1;
+
+    HAL_I2C_Master_Transmit(h_i2c, dev_addr, pData, 1, NHD_I2C_TIMEOUT);
+
+    HAL_Delay(1);
+}
+
+void lcd_write_string(char* str) {
+    while (*str != '\0') {
+    	lcd_write_byte((uint8_t)*str);
+        str++;
+    }
+}
+
+void lcd_prefix() {
+    lcd_write_byte(0xFE);
+}
+
+
+void lcd_display_on() {
+    lcd_prefix();
+    lcd_write_byte(0x41);
+}
+
+void lcd_display_off() {
+	lcd_prefix();
+	lcd_write_byte(0x42);
+}
+
+
+void lcd_set_cursor(uint8_t position) {
+	lcd_prefix();
+	lcd_write_byte(0x45);
+	lcd_write_byte(position);
+}
+
+void lcd_home() {
+	lcd_prefix();
+    lcd_write_byte(0x46);
+}
+
+void lcd_clear_screen() {
+	lcd_prefix();
+	lcd_write_byte(0x51);
+	HAL_Delay(2);
+}
+
+void lcd_set_contrast(uint8_t contrast) {
+	lcd_prefix();
+	lcd_write_byte(0x52);
+	lcd_write_byte(contrast);
+}
+
+void lcd_set_brightness(uint8_t brightness) {
+	lcd_prefix();
+	lcd_write_byte(0x53);
+	lcd_write_byte(brightness);
+}
+
+void lcd_firmware() {
+	lcd_prefix();
+	lcd_write_byte(0x70);
+}

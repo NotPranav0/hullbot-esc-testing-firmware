@@ -1,0 +1,112 @@
+#include "rpi_spi_link.h"
+#include "meas_config.h"
+#include "main.h"
+
+static uint8_t spi_tx_buf[BUFFER_SIZE];
+static uint8_t spi_rx_buf[BUFFER_SIZE];
+static uint8_t rx_copy_buffer[BUFFER_SIZE];
+
+static SPI_HandleTypeDef *h_spi;
+volatile bool* h_packet_recieved;
+
+static void spi_int_assert(void) {
+    HAL_GPIO_WritePin(SPI_INT_GPIO_Port, SPI_INT_Pin, GPIO_PIN_SET);
+}
+
+static void spi_int_deassert(void) {
+    HAL_GPIO_WritePin(SPI_INT_GPIO_Port, SPI_INT_Pin, GPIO_PIN_RESET);
+}
+
+void start_listening(void) {
+	while (HAL_SPI_TransmitReceive_DMA(h_spi, spi_tx_buf, spi_rx_buf, BUFFER_SIZE) != HAL_OK) {}
+}
+
+void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved) {
+	spi_int_deassert();
+
+    h_spi = spi;
+    h_packet_recieved = packet_recieved;
+
+    memset(spi_tx_buf, 0, BUFFER_SIZE);
+
+    start_listening();
+
+//    const char* response = "pong";
+//    send_packet_to_pi(LOG_MESSAGE, (const uint8_t*)response, strlen(response));
+}
+
+
+void process_packet(uint8_t* ret_buf) {
+	rx_commands_t command = rx_copy_buffer[0];
+	uint16_t payload_len = (rx_copy_buffer[1] << 8) | rx_copy_buffer[2];
+    const uint8_t* payload = &rx_copy_buffer[3];
+
+    switch (command) {
+        case SET_CONFIG:
+        	process_config((MeasConfig_t*)payload);
+            break;
+        case SEND_TEXT:
+            process_text((char*)payload, payload_len, ret_buf);
+            break;
+        default:
+            // Handle unknown command
+            break;
+    }
+}
+
+void process_text(char* text, uint16_t len, uint8_t* ret_buf) {
+    if(strncmp(text, "ping", len) == 0) {
+        const char* response = "pong";
+        send_packet_to_pi(LOG_MESSAGE, (const uint8_t*)response, strlen(response));
+    } else if(strncmp(text, "reset", len) == 0) {
+        NVIC_SystemReset();
+    } else {
+    	// no assosicated command, pass text back to caller
+    	memcpy(ret_buf, text, len);
+    }
+}
+
+void process_config(MeasConfig_t* received_config) {
+	//TODO
+}
+
+void send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t length) {
+    if ((length + 3) > BUFFER_SIZE) {
+       Error_Handler();
+       return;
+    }
+
+    spi_tx_buf[0] = command;
+    spi_tx_buf[1] = (length >> 8) & 0xFF;
+    spi_tx_buf[2] = length & 0xFF;
+
+
+    memcpy(&spi_tx_buf[3], payload, length);
+
+    spi_int_assert();
+}
+
+
+// --- STM32 HAL CALLBACKS ---
+
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *spi) {
+	spi_int_deassert();
+	*h_packet_recieved = true;
+	memcpy(rx_copy_buffer, spi_rx_buf, BUFFER_SIZE);
+
+}
+
+void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi) {
+	HAL_SPI_Abort(hspi);
+	start_listening();
+}
+
+// RPI POWER CONTROL
+void rpi_wake() {
+	//TODO
+    HAL_GPIO_WritePin(SHUTDOWN_GPIO_Port, SHUTDOWN_Pin, GPIO_PIN_SET);
+}
+void rpi_shutdown() {
+	//TODO
+}
+

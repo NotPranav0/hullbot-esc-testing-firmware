@@ -1,0 +1,13 @@
+../Drivers/CMSIS/Include/core_cm4.h:1933:34:__NVIC_SystemReset	1
+../Core/Src/rpi_spi_link.c:12:13:spi_int_assert	1
+../Core/Src/rpi_spi_link.c:16:13:spi_int_deassert	1
+../Core/Src/rpi_spi_link.c:20:6:start_listening	2
+../Core/Src/rpi_spi_link.c:24:6:link_init	1
+../Core/Src/rpi_spi_link.c:42:6:process_packet	3
+../Core/Src/rpi_spi_link.c:60:6:process_text	2
+../Core/Src/rpi_spi_link.c:69:6:process_config	1
+../Core/Src/rpi_spi_link.c:73:6:send_packet_to_pi	2
+../Core/Src/rpi_spi_link.c:94:6:HAL_SPI_TxRxCpltCallback	1
+../Core/Src/rpi_spi_link.c:101:6:HAL_SPI_ErrorCallback	1
+../Core/Src/rpi_spi_link.c:107:6:rpi_wake	1
+../Core/Src/rpi_spi_link.c:111:6:rpi_sleep	1

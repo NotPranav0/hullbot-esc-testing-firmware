@@ -1,0 +1,10 @@
+15:35:11 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
+make -j12 all 
+arm-none-eabi-size  L433RC_FINAL.elf 
+   text	   data	    bss	    dec	    hex	filename
+  27104	    128	   5248	  32480	   7ee0	L433RC_FINAL.elf
+Finished building: default.size.stdout
+ 
+
+15:35:11 Build Finished. 0 errors, 0 warnings. (took 431ms)
+

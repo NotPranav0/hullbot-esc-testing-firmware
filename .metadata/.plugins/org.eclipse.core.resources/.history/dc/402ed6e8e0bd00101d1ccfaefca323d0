@@ -1,0 +1,29 @@
+#include "config.h"
+
+Config_t config;
+
+const float P1V2_R_THRESHOLD_DEFAULT = 0;
+const float P1V8_R_THRESHOLD_DEFAULT = 0;
+const float P3V3A_R_THRESHOLD_DEFAULT = 0;
+const float P3V3IO_R_THRESHOLD_DEFAULT = 0;
+const float P5V_R_THRESHOLD_DEFAULT = 0;
+const float P10V_R_THRESHOLD_DEFAULT = 0;
+const float PVMAIN_R_THRESHOLD_DEFAULT = 0;
+
+const float SWD_R_THRESHOLD_DEFAULT = 0;
+const float CAN_R_THRESHOLD_DEFAULT = 0;
+
+// readings within +/- the tolerance will pass the test
+const float P1V2_V_TOLERANCE_DEFAULT = 0;
+const float P1V8_V_TOLERANCE_DEFAULT = 0;
+const float P3V3A_V_TOLERANCE_DEFAULT = 0;
+const float P3V3IO_V_TOLERANCE_DEFAULT = 0;
+const float P5V_V_TOLERANCE_DEFAULT = 0;
+const float P10V_V_TOLERANCE_DEFAULT = 0;
+const float PVMAIN_V_TOLERANCE_DEFAULT = 0;
+
+Config_t* config_init() {
+	config.
+}
+
+
