@@ -3,19 +3,35 @@
 #include <stdarg.h>
 #include "lcd.h"
 
+#define NUM_CHARS 16
+
+#define STARTUP_DELAY 	500
+#define I2C_TIMEOUT   	10
+
+#define I2C_ADDR 			0x28
+
+#define PREFIX 0xFE
+#define SET_CURSOR_CMD 0x45
+#define CLEAR_SCREEN_CMD 0x51
+#define CONTRAST_CMD 0x52
+#define BRIGHTNESS_CMD 0x53
+
+#define CONTRAST_DEFAULT 40 // 1-50
+#define BRIGHTNESS_DEFAULT 7 // 1-8 (1 = OFF, 8 = MAX)
+
+#define PRINTF_MAX_BUFFER 80   
+#define SCROLL_DELAY_MS 500
+#define SCROLL_PAUSE_MS 1000   
+
 static I2C_HandleTypeDef* h_i2c;
 
 static void lcd_set_cursor(uint8_t position);
 static void lcd_write_byte(uint8_t data);
 static void lcd_write_string(char* str);
 static void lcd_prefix();
-static void lcd_display_on();
-static void lcd_display_off();
-static void lcd_home();
-static void lcd_clear_screen();
 static void lcd_set_contrast(uint8_t contrast);
 static void lcd_set_brightness(uint8_t brightness);
-static void lcd_firmware();
+
 
 
 // Public functions
@@ -24,21 +40,55 @@ void lcd_init(I2C_HandleTypeDef* i2c) {
 	h_i2c = i2c;
 
     // Wait for display to power ON
-    HAL_Delay(NHD_STARTUP_DELAY);
+    HAL_Delay(STARTUP_DELAY);
 
     lcd_clear_screen();
-    lcd_set_contrast(40);
-    lcd_set_brightness(7);
+    lcd_set_contrast(CONTRAST_DEFAULT);
+    lcd_set_brightness(BRIGHTNESS_DEFAULT);
 }
 
-void lcd_print(const char* msg, LCD_Line_t line, ...) {
-		char text[16];
-		va_list args;
-		va_start(args, line);
-		vsnprintf(text, sizeof(text), msg, args);
-		va_end(args);
-		lcd_set_cursor(line);
-		lcd_write_string(text);
+void lcd_printf(LCD_Line_t line, const char* msg, ...) {
+    char formatted_string[PRINTF_MAX_BUFFER];
+    char frame_buffer[NUM_CHARS + 1];
+    
+    
+	va_list args;
+	va_start(args, msg);
+	vsnprintf(formatted_string, sizeof(formatted_string), msg, args);
+	va_end(args);
+
+    size_t len = strlen(formatted_string);
+    
+    lcd_set_cursor(line);
+
+	if (len <= NUM_CHARS) {
+		snprintf(frame_buffer, sizeof(frame_buffer), "%-*.*s", NUM_CHARS, NUM_CHARS, formatted_string);
+        
+		lcd_write_string(frame_buffer);
+	} 
+    else {
+		for (size_t i = 0; i <= (len - NUM_CHARS); i++) {
+			strncpy(frame_buffer, &formatted_string[i], NUM_CHARS);
+			frame_buffer[NUM_CHARS] = '\0'; 
+
+			lcd_set_cursor(line);
+			lcd_write_string(frame_buffer);
+
+			if (i == 0) {
+				HAL_Delay(SCROLL_PAUSE_MS); 
+			} else {
+				HAL_Delay(SCROLL_DELAY_MS);
+			}
+		}
+
+		HAL_Delay(SCROLL_PAUSE_MS);
+	}
+}
+
+void lcd_clear_screen() {
+	lcd_prefix();
+	lcd_write_byte(CLEAR_SCREEN_CMD);
+	HAL_Delay(2);
 }
 
 // Private functions
@@ -49,7 +99,7 @@ static void lcd_write_byte(uint8_t data) {
 
     uint16_t dev_addr = I2C_ADDR << 1;
 
-    HAL_I2C_Master_Transmit(h_i2c, dev_addr, pData, 1, NHD_I2C_TIMEOUT);
+    HAL_I2C_Master_Transmit(h_i2c, dev_addr, pData, 1, I2C_TIMEOUT);
 
     HAL_Delay(2);
 }
@@ -61,54 +111,25 @@ static void lcd_write_string(char* str) {
     }
 }
 
-
-
 static void lcd_prefix() {
-    lcd_write_byte(0xFE);
-}
-
-
-static void lcd_display_on() {
-    lcd_prefix();
-    lcd_write_byte(0x41);
-}
-
-static void lcd_display_off() {
-	lcd_prefix();
-	lcd_write_byte(0x42);
+    lcd_write_byte(PREFIX);
 }
 
 
 static void lcd_set_cursor(uint8_t position) {
 	lcd_prefix();
-	lcd_write_byte(0x45);
+	lcd_write_byte(SET_CURSOR_CMD);
 	lcd_write_byte(position);
-}
-
-static void lcd_home() {
-	lcd_prefix();
-    lcd_write_byte(0x46);
-}
-
-static void lcd_clear_screen() {
-	lcd_prefix();
-	lcd_write_byte(0x51);
-	HAL_Delay(2);
 }
 
 static void lcd_set_contrast(uint8_t contrast) {
 	lcd_prefix();
-	lcd_write_byte(0x52);
+	lcd_write_byte(CONTRAST_CMD);
 	lcd_write_byte(contrast);
 }
 
 static void lcd_set_brightness(uint8_t brightness) {
 	lcd_prefix();
-	lcd_write_byte(0x53);
+	lcd_write_byte(BRIGHTNESS_CMD);
 	lcd_write_byte(brightness);
-}
-
-static void lcd_firmware() {
-	lcd_prefix();
-	lcd_write_byte(0x70);
 }

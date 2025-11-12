@@ -7,20 +7,9 @@
 
 typedef enum
 {
-    ESC_P1V2 = 0U,
-    ESC_P1V8,
-    ESC_P3V3_A,
-    ESC_P3V3_IO,
-    ESC_P5V,
-    ESC_P10V,
-    ESC_PVMAIN
-} esc_voltage_net_t;
-
-typedef enum
-{
-    VOLTAGE = 0U,
-    RESISTANCE
-} esc_voltage_net_mode_t;
+    ORIGINAL = 0U,
+    MEASUREMENT
+} esc_net_mode_t;
 
 typedef enum
 {
@@ -28,21 +17,9 @@ typedef enum
     CONNECTED
 } esc_power_mode_t;
 
-typedef enum
-{
-    MEASURING = 0U,
-    COMMUNICATING,
-} esc_comms_mode_t;
-
 bool esc_is_connected(void);
 void esc_set_pwr(esc_power_mode_t mode);
-
-void esc_set_all_voltage_nets_mode(esc_voltage_net_mode_t mode);
-
-void esc_set_swd_mode(esc_comms_mode_t mode);
-void esc_set_can_mode(esc_comms_mode_t mode);
-
-
+void esc_set_all_nets_mode(esc_net_mode_t mode);
 
 #endif /* INC_ESC_H_ */
 
@@ -105,13 +82,13 @@ HIGH: STLink
 
 =====CAN=====
 
-ESC_CAN_N_SEL_Pin
-ESC_CAN_N_SEL_GPIO_Port
-LOW: GND
-HIGH: XCVR
-
 ESC_CAN_P_SEL_Pin
 ESC_CAN_P_SEL_GPIO_Port
 LOW: XCVR
 HIGH: ADC15
+
+ESC_CAN_N_SEL_Pin
+ESC_CAN_N_SEL_GPIO_Port
+LOW: GND
+HIGH: XCVR
 */

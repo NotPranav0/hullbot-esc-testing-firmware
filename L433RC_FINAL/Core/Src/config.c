@@ -1,6 +1,7 @@
+#include <string.h>
 #include "config.h"
 
-static Config_t config;
+static config_t config;
 
 const float P1V2_R_THRESHOLD_DEFAULT = 0;
 const float P1V8_R_THRESHOLD_DEFAULT = 0;
@@ -9,7 +10,6 @@ const float P3V3IO_R_THRESHOLD_DEFAULT = 0;
 const float P5V_R_THRESHOLD_DEFAULT = 0;
 const float P10V_R_THRESHOLD_DEFAULT = 0;
 const float PVMAIN_R_THRESHOLD_DEFAULT = 0;
-
 const float SWD_R_THRESHOLD_DEFAULT = 0;
 const float CAN_R_THRESHOLD_DEFAULT = 0;
 
@@ -30,86 +30,77 @@ const float P5V_V_TOLERANCE_DEFAULT = 0;
 const float P10V_V_TOLERANCE_DEFAULT = 0;
 const float PVMAIN_V_TOLERANCE_DEFAULT = 0;
 
-static uint32_t config_evaluate_resistance_threshold(float measurement, float threshold);
-static uint32_t config_evaluate_voltage_tolerance(float measurement, float expected, float tolerance);
+config_resistance_thresholds_t res_thresholds[] = {
+    {.name = "P1V2", .threshold = P1V2_R_THRESHOLD_DEFAULT},
+    {.name = "P1V8", .threshold = P1V8_R_THRESHOLD_DEFAULT},
+    {.name = "P3V3_A", .threshold = P3V3A_R_THRESHOLD_DEFAULT},
+    {.name = "P3V3_IO", .threshold = P3V3IO_R_THRESHOLD_DEFAULT},
+    {.name = "P5V", .threshold = P5V_R_THRESHOLD_DEFAULT},
+    {.name = "P10V", .threshold = P10V_R_THRESHOLD_DEFAULT},
+    {.name = "PVMAIN", .threshold = PVMAIN_R_THRESHOLD_DEFAULT},
+    {.name = "SWD", .threshold = SWD_R_THRESHOLD_DEFAULT},
+    {.name = "CAN", .threshold = CAN_R_THRESHOLD_DEFAULT}
+};
+
+config_voltage_tolerances_t voltage_tolerances[] = {
+    {.name = "P1V2", .expected = P1V2_V_EXPECTED_DEFAULT, .tolerance = P1V2_V_TOLERANCE_DEFAULT},
+    {.name = "P1V8", .expected = P1V8_V_EXPECTED_DEFAULT, .tolerance = P1V8_V_TOLERANCE_DEFAULT},
+    {.name = "P3V3_A", .expected = P3V3A_V_EXPECTED_DEFAULT, .tolerance = P3V3A_V_TOLERANCE_DEFAULT},
+    {.name = "P3V3_IO", .expected = P3V3IO_V_EXPECTED_DEFAULT, .tolerance = P3V3IO_V_TOLERANCE_DEFAULT},
+    {.name = "P5V", .expected = P5V_V_EXPECTED_DEFAULT, .tolerance = P5V_V_TOLERANCE_DEFAULT},
+    {.name = "P10V", .expected = P10V_V_EXPECTED_DEFAULT, .tolerance = P10V_V_TOLERANCE_DEFAULT},
+    {.name = "PVMAIN", .expected = PVMAIN_V_EXPECTED_DEFAULT, .tolerance = PVMAIN_V_TOLERANCE_DEFAULT}
+};
+
+
+static adc_result_t config_evaluate_resistance_threshold(float measurement, float threshold);
+static adc_result_t config_evaluate_voltage_tolerance(float measurement, float expected, float tolerance);
 
 // Public
 
-Config_t* config_init() {
-	config.P1V2_R_THRESHOLD = P1V2_R_THRESHOLD_DEFAULT;
-	config.P1V8_R_THRESHOLD = P1V8_R_THRESHOLD_DEFAULT;
-	config.P3V3A_R_THRESHOLD = P3V3A_R_THRESHOLD_DEFAULT;
-	config.P3V3IO_R_THRESHOLD = P3V3IO_R_THRESHOLD_DEFAULT;
-	config.P5V_R_THRESHOLD = P5V_R_THRESHOLD_DEFAULT;
-	config.P10V_R_THRESHOLD = P10V_R_THRESHOLD_DEFAULT;
-	config.PVMAIN_R_THRESHOLD = PVMAIN_R_THRESHOLD_DEFAULT;
-	config.SWD_R_THRESHOLD = SWD_R_THRESHOLD_DEFAULT;
-	config.CAN_R_THRESHOLD = CAN_R_THRESHOLD_DEFAULT;
-
-	config.P1V2_V_EXPECTED = P1V2_V_EXPECTED_DEFAULT;
-	config.P1V8_V_EXPECTED = P1V8_V_EXPECTED_DEFAULT;
-	config.P3V3A_V_EXPECTED = P3V3A_V_EXPECTED_DEFAULT;
-	config.P3V3IO_V_EXPECTED = P3V3IO_V_EXPECTED_DEFAULT;
-	config.P5V_V_EXPECTED = P5V_V_EXPECTED_DEFAULT;
-	config.P10V_V_EXPECTED = P10V_V_EXPECTED_DEFAULT;
-	config.PVMAIN_V_EXPECTED = PVMAIN_V_EXPECTED_DEFAULT;
-
-
-	config.P1V2_V_TOLERANCE = P1V2_V_TOLERANCE_DEFAULT;
-	config.P1V8_V_TOLERANCE = P1V8_V_TOLERANCE_DEFAULT;
-	config.P3V3A_V_TOLERANCE = P3V3A_V_TOLERANCE_DEFAULT;
-	config.P3V3IO_V_TOLERANCE = P3V3IO_V_TOLERANCE_DEFAULT;
-	config.P5V_V_TOLERANCE = P5V_V_TOLERANCE_DEFAULT;
-	config.P10V_V_TOLERANCE = P10V_V_TOLERANCE_DEFAULT;
-	config.PVMAIN_V_TOLERANCE = PVMAIN_V_TOLERANCE_DEFAULT;
+config_t* config_init() {
+	memcpy(config.resistance_thresholds, res_thresholds, sizeof(res_thresholds));
+	memcpy(config.voltage_tolerances, voltage_tolerances, sizeof(voltage_tolerances));
 	return &config;
 }
 
-uint32_t config_evaluate_resistances(float* measurements) {
+bool config_evaluate_resistances(adc_measurement_t* measurements) {
 	uint32_t results = 0;
+	for (int i = 0; i < NUM_RESISTANCE_CHANNELS; i++) {
+		measurements[i].result = config_evaluate_resistance_threshold(measurements[i].measurement, config.resistance_thresholds[i].threshold);
+		results |= (measurements[i].result << i);
+	}
 
-	results |= (config_evaluate_resistance_threshold(measurements[0], config.P1V2_R_THRESHOLD) << 0);
-	results |= (config_evaluate_resistance_threshold(measurements[1], config.P1V8_R_THRESHOLD) << 1);
-	results |= (config_evaluate_resistance_threshold(measurements[2], config.P3V3A_R_THRESHOLD) << 2);
-	results |= (config_evaluate_resistance_threshold(measurements[3], config.P3V3IO_R_THRESHOLD) << 3);
-	results |= (config_evaluate_resistance_threshold(measurements[4], config.P5V_R_THRESHOLD) << 4);
-	results |= (config_evaluate_resistance_threshold(measurements[5], config.P10V_R_THRESHOLD) << 5);
-	results |= (config_evaluate_resistance_threshold(measurements[6], config.PVMAIN_R_THRESHOLD) << 6);
-	results |= (config_evaluate_resistance_threshold(measurements[7], config.SWD_R_THRESHOLD) << 7);
-	results |= (config_evaluate_resistance_threshold(measurements[8], config.CAN_R_THRESHOLD) << 8);
-
-	return results;
+	// results = 0 means all PASS
+	// return true if any failures
+	return (results != 0);
 }
-
-uint32_t config_evaluate_voltages(float* measurements) {
+	
+bool config_evaluate_voltages(adc_measurement_t* measurements) {
 	uint32_t results = 0;
+	for (int i = 0; i < NUM_VOLTAGE_CHANNELS; i++) {
+		measurements[i].result = config_evaluate_voltage_tolerance(measurements[i].measurement, config.voltage_tolerances[i].expected, config.voltage_tolerances[i].tolerance);
+		results |= (measurements[i].result << i);
+	}
 
-	results |= (config_evaluate_voltage_tolerance(measurements[0], config.P1V2_V_EXPECTED, config.P1V2_V_TOLERANCE) << 0);
-	results |= (config_evaluate_voltage_tolerance(measurements[1], config.P1V8_V_EXPECTED, config.P1V8_V_TOLERANCE) << 1);
-	results |= (config_evaluate_voltage_tolerance(measurements[2], config.P3V3A_V_EXPECTED, config.P3V3A_V_TOLERANCE) << 2);
-	results |= (config_evaluate_voltage_tolerance(measurements[3], config.P3V3IO_V_EXPECTED, config.P3V3IO_V_TOLERANCE) << 3);
-	results |= (config_evaluate_voltage_tolerance(measurements[4], config.P5V_V_EXPECTED, config.P5V_V_TOLERANCE) << 4);
-	results |= (config_evaluate_voltage_tolerance(measurements[5], config.P10V_V_EXPECTED, config.P10V_V_TOLERANCE) << 5);
-	results |= (config_evaluate_voltage_tolerance(measurements[6], config.PVMAIN_V_EXPECTED, config.PVMAIN_V_TOLERANCE) << 6);
-
-	return results;
+	return (results != 0);
 }
 
 // Private
 
-static uint32_t config_evaluate_resistance_threshold(float measurement, float threshold) {
+static adc_result_t config_evaluate_resistance_threshold(float measurement, float threshold) {
 	if (measurement >= threshold) {
-		return 1; // Pass
+		return PASS;
 	} else {
-		return 0; // Fail
+		return FAIL;
 	}
 }
 
-static uint32_t config_evaluate_voltage_tolerance(float measurement, float expected, float tolerance) {
+static adc_result_t config_evaluate_voltage_tolerance(float measurement, float expected, float tolerance) {
 	if (measurement >= (expected - tolerance) && measurement <= (expected + tolerance)) {
-		return 1; // Pass
+		return PASS;
 	} else {
-		return 0; // Fail
+		return FAIL;
 	}
 }
 

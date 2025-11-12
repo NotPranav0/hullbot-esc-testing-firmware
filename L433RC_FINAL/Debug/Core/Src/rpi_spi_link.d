@@ -1,6 +1,5 @@
 Core/Src/rpi_spi_link.o: ../Core/Src/rpi_spi_link.c ../Core/Inc/config.h \
- ../Core/Inc/rpi_spi_link.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
+ ../Core/Inc/adc.h ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h \
@@ -32,9 +31,9 @@ Core/Src/rpi_spi_link.o: ../Core/Src/rpi_spi_link.c ../Core/Inc/config.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h \
- ../Core/Inc/main.h
+ ../Core/Inc/esc.h ../Core/Inc/rpi_spi_link.h ../Core/Inc/main.h
 ../Core/Inc/config.h:
-../Core/Inc/rpi_spi_link.h:
+../Core/Inc/adc.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h:
@@ -67,4 +66,6 @@ Core/Src/rpi_spi_link.o: ../Core/Src/rpi_spi_link.c ../Core/Inc/config.h \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h:
+../Core/Inc/esc.h:
+../Core/Inc/rpi_spi_link.h:
 ../Core/Inc/main.h:

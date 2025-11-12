@@ -1,80 +1,88 @@
 #include "esc.h"
-#include "app.h"
+#include "main.h"
+#include "stm32l4xx_hal.h"
 
 #include <stdbool.h>
 
 
-#define ESC_VOLTAGE_NET_COUNT 7
+#define ESC_NET_COUNT 11
 
-static void esc_set_voltage_net_mode(esc_voltage_net_t net, esc_voltage_net_mode_t mode);
+typedef enum {
+    ESC_P1V2 = 0U,
+    ESC_P1V8,
+    ESC_P3V3_A,
+    ESC_P3V3_IO,
+    ESC_P5V,
+    ESC_P10V,
+    ESC_PVMAIN,
+    ESC_SWDIO,
+    ESC_SWCLK,
+    ESC_CAN_P,
+    ESC_CAN_N
+} esc_net_t;
+
+static void esc_set_net_mode(esc_net_t net, esc_net_mode_t mode);
 static GPIO_PinState invert(GPIO_PinState state);
 
-// for resistive modes invert
-GPIO_PinState voltage_nets_modes[] = {
+
+
+// invert for resistive measuring mode  
+GPIO_PinState esc_nets_original_modes[] = {
 	GPIO_PIN_RESET,
 	GPIO_PIN_SET,
 	GPIO_PIN_SET,
 	GPIO_PIN_RESET,
 	GPIO_PIN_RESET,
 	GPIO_PIN_RESET,
-	GPIO_PIN_SET
+	GPIO_PIN_SET,
+    GPIO_PIN_RESET,
+    GPIO_PIN_SET,
+    GPIO_PIN_RESET,
+    GPIO_PIN_SET
 };
 
-uint16_t voltage_net_pins[] = {
+uint16_t esc_net_pins[] = {
     ESC_P1V2_SEL_Pin,
     ESC_P1V8_SEL_Pin,
     ESC_P3V3_A_SEL_Pin,
     ESC_P3V3_IO_SEL_Pin,
     ESC_P5V_SEL_Pin,
     ESC_P10V_SEL_Pin,
-    ESC_PVMAIN_SEL_Pin
+    ESC_PVMAIN_SEL_Pin,
+    ESC_SWDIO_SEL_Pin,
+    ESC_SWCLK_SEL_Pin,
+    ESC_CAN_P_SEL_Pin,
+    ESC_CAN_N_SEL_Pin
 };
 
-GPIO_TypeDef *voltage_net_ports[] = {
+GPIO_TypeDef *esc_net_ports[] = {
     ESC_P1V2_SEL_GPIO_Port,
     ESC_P1V8_SEL_GPIO_Port,
     ESC_P3V3_A_SEL_GPIO_Port,
     ESC_P3V3_IO_SEL_GPIO_Port,
     ESC_P5V_SEL_GPIO_Port,
     ESC_P10V_SEL_GPIO_Port,
-    ESC_PVMAIN_SEL_GPIO_Port
+    ESC_PVMAIN_SEL_GPIO_Port,
+    ESC_SWDIO_SEL_GPIO_Port,
+    ESC_SWCLK_SEL_GPIO_Port,
+    ESC_CAN_P_SEL_GPIO_Port,
+    ESC_CAN_N_SEL_GPIO_Port
 };
 
 
-
 bool esc_is_connected() {
-	return (HAL_GPIO_ReadPin(ESC_DET_GPIO_Port, ESC_DET_Pin) == GPIO_PIN_RESET);
+	//return (HAL_GPIO_ReadPin(ESC_DET_GPIO_Port, ESC_DET_Pin) == GPIO_PIN_RESET);
+	return true; //TODO
 }
 
 void esc_set_pwr(esc_power_mode_t mode) {
 	HAL_GPIO_WritePin(ESC_PWR_SEL_GPIO_Port, ESC_PWR_SEL_Pin, mode);
 }
 
-
-void esc_set_all_voltage_nets_mode(esc_voltage_net_mode_t mode) {
-	for (esc_voltage_net_t net = 0; net < ESC_VOLTAGE_NET_COUNT; net++) {
-		esc_set_voltage_net_mode(net, mode);
+void esc_set_all_nets_mode(esc_net_mode_t mode) {
+	for (esc_net_t net = 0; net < ESC_NET_COUNT; net++) {
+		esc_set_net_mode(net, mode);
 	}
-}
-
-void esc_set_swd_mode(esc_comms_mode_t mode) {
-    if (mode == MEASURING) {
-        HAL_GPIO_WritePin(ESC_SWDIO_SEL_GPIO_Port, ESC_SWDIO_SEL_Pin, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(ESC_SWCLK_SEL_GPIO_Port, ESC_SWCLK_SEL_Pin, GPIO_PIN_RESET);
-    } else if (mode == COMMUNICATING) {
-        HAL_GPIO_WritePin(ESC_SWDIO_SEL_GPIO_Port, ESC_SWDIO_SEL_Pin, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(ESC_SWCLK_SEL_GPIO_Port, ESC_SWCLK_SEL_Pin, GPIO_PIN_SET);
-    }
-}
-
-void esc_set_can_mode(esc_comms_mode_t mode) {
-    if (mode == MEASURING) {
-        HAL_GPIO_WritePin(ESC_CAN_P_SEL_GPIO_Port, ESC_CAN_P_SEL_Pin, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(ESC_CAN_N_SEL_GPIO_Port, ESC_CAN_N_SEL_Pin, GPIO_PIN_RESET);
-    } else if (mode == COMMUNICATING) {
-        HAL_GPIO_WritePin(ESC_CAN_P_SEL_GPIO_Port, ESC_CAN_P_SEL_Pin, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(ESC_CAN_N_SEL_GPIO_Port, ESC_CAN_N_SEL_Pin, GPIO_PIN_SET);
-    }
 }
 
 // Private
@@ -87,10 +95,10 @@ static GPIO_PinState invert(GPIO_PinState state) {
     }
 }
 
-static void esc_set_voltage_net_mode(esc_voltage_net_t net, esc_voltage_net_mode_t mode) {
-    if (mode == VOLTAGE) {
-		HAL_GPIO_WritePin(voltage_net_ports[net], voltage_net_pins[net], voltage_nets_modes[net]);
-	} else if (mode == RESISTANCE) {
-		HAL_GPIO_WritePin(voltage_net_ports[net], voltage_net_pins[net], invert(voltage_nets_modes[net]));
+static void esc_set_net_mode(esc_net_t net, esc_net_mode_t mode) {
+    if (mode == ORIGINAL) {
+		HAL_GPIO_WritePin(esc_net_ports[net], esc_net_pins[net], esc_nets_original_modes[net]);
+	} else if (mode == MEASUREMENT) {
+		HAL_GPIO_WritePin(esc_net_ports[net], esc_net_pins[net], invert(esc_nets_original_modes[net]));
 	}
 }

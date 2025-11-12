@@ -11,33 +11,15 @@
 // MAX SPI PAYLOAD SIZE
 #define PAYLOAD_SIZE BUFFER_SIZE - 4
 
-//Pi -> STM32 Commands
-typedef enum {
-	SET_CONFIG = 0x01,
-	SEND_TEXT = 0x02
+void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved, config_t* config);
+uint32_t link_process_packet(uint8_t* ret_buf);
 
-} rx_commands_t;
-
-//STM32 -> Pi Commands
-typedef enum {
-	PING = 0x80,
-	LOG_MESSAGE = 0x81,
-	DEBUG_INFO = 0x82
-} tx_commands_t;
-
-void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved, Config_t* config);
-void send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t length);
-void log_to_pi(const char* msg, ...);
-void process_packet(uint8_t* ret_buf);
-
+void rpi_printf(const char* msg, ...);
+void rpi_send_debug_info(const uint8_t* data, uint16_t length);
 void rpi_press_power_button(void);
 bool rpi_is_awake(void);
 
-void spi_int_assert(void);
-void spi_int_deassert(void);
-void start_listening(void);
-void process_text(char* text, uint16_t len, uint8_t* ret_buf);
-void process_config(Config_t* received_config);
+
 
 #endif
 

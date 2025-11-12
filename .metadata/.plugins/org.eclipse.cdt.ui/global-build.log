@@ -1,44 +1,25 @@
-16:17:39 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-size  L433RC_FINAL.elf 
-   text	   data	    bss	    dec	    hex	filename
-  42388	    584	   5584	  48556	   bdac	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-16:17:57 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-size  L433RC_FINAL.elf 
-   text	   data	    bss	    dec	    hex	filename
-  42388	    584	   5584	  48556	   bdac	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-16:21:12 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
+16:51:18 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
 make -j12 all 
 arm-none-eabi-gcc "../Core/Src/lcd.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/lcd.d" -MT"Core/Src/lcd.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/lcd.o"
-../Core/Src/lcd.c: In function 'lcd_write_float':
-../Core/Src/lcd.c:37:9: warning: implicit declaration of function 'snprintf' [-Wimplicit-function-declaration]
-   37 |         snprintf(buffer, sizeof(buffer), "%.*f", decimal_places, value);
-      |         ^~~~~~~~
-../Core/Src/lcd.c:3:1: note: include '<stdio.h>' or provide a declaration of 'snprintf'
-    2 | #include "lcd.h"
-  +++ |+#include <stdio.h>
-    3 | 
-../Core/Src/lcd.c:37:9: warning: incompatible implicit declaration of built-in function 'snprintf' [-Wbuiltin-declaration-mismatch]
-   37 |         snprintf(buffer, sizeof(buffer), "%.*f", decimal_places, value);
-      |         ^~~~~~~~
-../Core/Src/lcd.c:37:9: note: include '<stdio.h>' or provide a declaration of 'snprintf'
+../Core/Src/lcd.c: In function 'lcd_printf':
+../Core/Src/lcd.c:65:63: warning: '%-*s' directive output may be truncated writing between 16 and 79 bytes into a region of size 17 [-Wformat-truncation=]
+   65 |                 snprintf(frame_buffer, sizeof(frame_buffer), "%-*s", NUM_CHARS, formatted_string);
+      |                                                               ^~~~              ~~~~~~~~~~~~~~~~
+../Core/Src/lcd.c:65:17: note: 'snprintf' output between 17 and 80 bytes into a destination of size 17
+   65 |                 snprintf(frame_buffer, sizeof(frame_buffer), "%-*s", NUM_CHARS, formatted_string);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: L433RC_FINAL.elf
  
 arm-none-eabi-size  L433RC_FINAL.elf 
 arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
    text	   data	    bss	    dec	    hex	filename
-  42388	    584	   5584	  48556	   bdac	L433RC_FINAL.elf
+  42764	    832	   5648	  49244	   c05c	L433RC_FINAL.elf
 Finished building: default.size.stdout
  
 Finished building: L433RC_FINAL.list
  
-16:21:32 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
+16:53:24 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
 make -j12 all 
 arm-none-eabi-gcc "../Core/Src/lcd.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/lcd.d" -MT"Core/Src/lcd.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/lcd.o"
 arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
@@ -47,115 +28,50 @@ Finished building target: L433RC_FINAL.elf
 arm-none-eabi-size  L433RC_FINAL.elf 
 arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
    text	   data	    bss	    dec	    hex	filename
-  42388	    584	   5584	  48556	   bdac	L433RC_FINAL.elf
+  42764	    832	   5648	  49244	   c05c	L433RC_FINAL.elf
 Finished building: default.size.stdout
  
 Finished building: L433RC_FINAL.list
  
-16:24:11 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
+16:54:05 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
+make -j12 all 
+arm-none-eabi-size  L433RC_FINAL.elf 
+   text	   data	    bss	    dec	    hex	filename
+  42764	    832	   5648	  49244	   c05c	L433RC_FINAL.elf
+Finished building: default.size.stdout
+ 
+16:56:27 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
 make -j12 all 
 arm-none-eabi-gcc "../Core/Src/app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/app.d" -MT"Core/Src/app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/app.o"
-../Core/Src/app.c: In function 'resistance_tests':
-../Core/Src/app.c:81:9: warning: implicit declaration of function 'cd_write_float'; did you mean 'lcd_write_float'? [-Wimplicit-function-declaration]
-   81 |         cd_write_float(measurements[6], 5);
-      |         ^~~~~~~~~~~~~~
-      |         lcd_write_float
-../Core/Src/app.c:86:18: warning: unused variable 'results' [-Wunused-variable]
-   86 |         uint32_t results = config_evaluate_resistances(measurements);
-      |                  ^~~~~~~
-../Core/Src/app.c: In function 'voltage_tests':
-../Core/Src/app.c:97:18: warning: unused variable 'results' [-Wunused-variable]
-   97 |         uint32_t results = config_evaluate_voltages(measurements);
-      |                  ^~~~~~~
-../Core/Src/app.c: In function 'app_main':
-../Core/Src/app.c:46:6: warning: infinite recursion detected [-Winfinite-recursion]
-   46 | void app_main(void) {
-      |      ^~~~~~~~
-../Core/Src/app.c:61:25: note: recursive call
-   61 |                         app_main();
-      |                         ^~~~~~~~~~
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-C:/ST/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: ./Core/Src/app.o: in function `resistance_tests':
-C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC_FINAL/Debug/../Core/Src/app.c:81:(.text.resistance_tests+0x5c): undefined reference to `cd_write_float'
-collect2.exe: error: ld returned 1 exit status
-make: *** [makefile:64: L433RC_FINAL.elf] Error 1
-"make -j12 all" terminated with exit code 2. Build might be incomplete.
-16:24:20 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/app.d" -MT"Core/Src/app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/app.o"
-../Core/Src/app.c: In function 'resistance_tests':
-../Core/Src/app.c:86:18: warning: unused variable 'results' [-Wunused-variable]
-   86 |         uint32_t results = config_evaluate_resistances(measurements);
-      |                  ^~~~~~~
-../Core/Src/app.c: In function 'voltage_tests':
-../Core/Src/app.c:97:18: warning: unused variable 'results' [-Wunused-variable]
-   97 |         uint32_t results = config_evaluate_voltages(measurements);
-      |                  ^~~~~~~
-../Core/Src/app.c: In function 'app_main':
-../Core/Src/app.c:46:6: warning: infinite recursion detected [-Winfinite-recursion]
-   46 | void app_main(void) {
-      |      ^~~~~~~~
-../Core/Src/app.c:61:25: note: recursive call
-   61 |                         app_main();
-      |                         ^~~~~~~~~~
 arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: L433RC_FINAL.elf
  
 arm-none-eabi-size  L433RC_FINAL.elf 
 arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
    text	   data	    bss	    dec	    hex	filename
-  42428	    584	   5584	  48596	   bdd4	L433RC_FINAL.elf
+  42788	    832	   5648	  49268	   c074	L433RC_FINAL.elf
 Finished building: default.size.stdout
  
 Finished building: L433RC_FINAL.list
  
-16:24:44 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
+16:57:06 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
 make -j12 all 
 arm-none-eabi-size  L433RC_FINAL.elf 
    text	   data	    bss	    dec	    hex	filename
-  42428	    584	   5584	  48596	   bdd4	L433RC_FINAL.elf
+  42788	    832	   5648	  49268	   c074	L433RC_FINAL.elf
 Finished building: default.size.stdout
  
-16:25:30 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
+16:58:40 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
 make -j12 all 
-arm-none-eabi-gcc "../Core/Src/app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/app.d" -MT"Core/Src/app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/app.o"
-../Core/Src/app.c: In function 'resistance_tests':
-../Core/Src/app.c:86:18: warning: unused variable 'results' [-Wunused-variable]
-   86 |         uint32_t results = config_evaluate_resistances(measurements);
-      |                  ^~~~~~~
-../Core/Src/app.c: In function 'voltage_tests':
-../Core/Src/app.c:97:18: warning: unused variable 'results' [-Wunused-variable]
-   97 |         uint32_t results = config_evaluate_voltages(measurements);
-      |                  ^~~~~~~
-../Core/Src/app.c: In function 'app_main':
-../Core/Src/app.c:46:6: warning: infinite recursion detected [-Winfinite-recursion]
-   46 | void app_main(void) {
-      |      ^~~~~~~~
-../Core/Src/app.c:61:25: note: recursive call
-   61 |                         app_main();
-      |                         ^~~~~~~~~~
+arm-none-eabi-gcc "../Core/Src/lcd.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/lcd.d" -MT"Core/Src/lcd.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/lcd.o"
 arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: L433RC_FINAL.elf
  
 arm-none-eabi-size  L433RC_FINAL.elf 
 arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
    text	   data	    bss	    dec	    hex	filename
-  42428	    584	   5584	  48596	   bdd4	L433RC_FINAL.elf
+  42788	    832	   5648	  49268	   c074	L433RC_FINAL.elf
 Finished building: default.size.stdout
  
 Finished building: L433RC_FINAL.list
- 
-16:26:31 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-size  L433RC_FINAL.elf 
-   text	   data	    bss	    dec	    hex	filename
-  42428	    584	   5584	  48596	   bdd4	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-16:26:42 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-size  L433RC_FINAL.elf 
-   text	   data	    bss	    dec	    hex	filename
-  42428	    584	   5584	  48596	   bdd4	L433RC_FINAL.elf
-Finished building: default.size.stdout
  

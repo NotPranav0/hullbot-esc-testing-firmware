@@ -1,0 +1,103 @@
+#include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include "lcd.h"
+
+#define NHD_STARTUP_DELAY 	500
+#define NHD_I2C_TIMEOUT   	10
+#define I2C_ADDR 			0x28
+
+#define PREFIX 0xFE
+
+#define SET_CURSOR_CMD 0x45
+#define CLEAR_SCREEN_CMD 0x51
+#define CONTRAST_CMD 0x52
+#define BRIGHTNESS_CMD 0x53
+
+#define CONTRAST_DEFAULT 40 // 1-50
+#define BRIGHTNESS_DEFAULT 7 // 1-8 (1 = OFF, 8 = MAX)
+
+
+
+static I2C_HandleTypeDef* h_i2c;
+
+static void lcd_set_cursor(uint8_t position);
+static void lcd_write_byte(uint8_t data);
+static void lcd_write_string(char* str);
+static void lcd_prefix();
+static void lcd_set_contrast(uint8_t contrast);
+static void lcd_set_brightness(uint8_t brightness);
+
+
+
+// Public functions
+
+void lcd_init(I2C_HandleTypeDef* i2c) {
+	h_i2c = i2c;
+
+    // Wait for display to power ON
+    HAL_Delay(NHD_STARTUP_DELAY);
+
+    lcd_clear_screen();
+    lcd_set_contrast(40);
+    lcd_set_brightness(7);
+}
+
+void lcd_printf(LCD_Line_t line, const char* msg, ...) {
+		char text[16];
+		va_list args;
+		va_start(args, msg);
+		vsnprintf(text, sizeof(text), msg, args);
+		va_end(args);
+		lcd_set_cursor(line);
+		lcd_write_string(text);
+}
+
+void lcd_clear_screen() {
+	lcd_prefix();
+	lcd_write_byte(CLEAR_SCREEN_CMD);
+	HAL_Delay(2);
+}
+
+// Private functions
+
+static void lcd_write_byte(uint8_t data) {
+    uint8_t pData[1];
+    pData[0] = data;
+
+    uint16_t dev_addr = I2C_ADDR << 1;
+
+    HAL_I2C_Master_Transmit(h_i2c, dev_addr, pData, 1, NHD_I2C_TIMEOUT);
+
+    HAL_Delay(2);
+}
+
+static void lcd_write_string(char* str) {
+    while (*str != '\0') {
+    	lcd_write_byte((uint8_t)*str);
+        str++;
+    }
+}
+
+static void lcd_prefix() {
+    lcd_write_byte(PREFIX);
+}
+
+
+static void lcd_set_cursor(uint8_t position) {
+	lcd_prefix();
+	lcd_write_byte(SET_CURSOR_CMD);
+	lcd_write_byte(position);
+}
+
+static void lcd_set_contrast(uint8_t contrast) {
+	lcd_prefix();
+	lcd_write_byte(CONTRAST_CMD);
+	lcd_write_byte(contrast);
+}
+
+static void lcd_set_brightness(uint8_t brightness) {
+	lcd_prefix();
+	lcd_write_byte(BRIGHTNESS_CMD);
+	lcd_write_byte(brightness);
+}

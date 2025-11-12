@@ -1,5 +1,5 @@
-../Core/Src/adc.c:12:7:raw_to_float	1
-../Core/Src/adc.c:52:6:adc_init	1
-../Core/Src/adc.c:58:10:adc_read_channel_blocking	1
-../Core/Src/adc.c:77:6:adc_take_resistance_measurements	4
-../Core/Src/adc.c:90:6:adc_take_voltage_measurements	4
+../Core/Src/adc.c:45:6:adc_init	1
+../Core/Src/adc.c:51:6:adc_set_1v2_source	1
+../Core/Src/adc.c:55:6:adc_take_measurements	5
+../Core/Src/adc.c:80:14:raw_to_volts	1
+../Core/Src/adc.c:85:17:adc_read_channel_blocking	1

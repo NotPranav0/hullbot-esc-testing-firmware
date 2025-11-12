@@ -1,8 +1,5 @@
-../Core/Src/esc.c:39:15:invert	16	static
-../Core/Src/esc.c:47:6:esc_is_connected	8	static
-../Core/Src/esc.c:51:6:esc_set_1v2_source	16	static
-../Core/Src/esc.c:55:6:esc_set_voltage_net_mode	24	static
-../Core/Src/esc.c:62:6:esc_set_all_voltage_nets_mode	24	static
-../Core/Src/esc.c:68:6:esc_set_swd_mode	16	static
-../Core/Src/esc.c:78:6:esc_set_can_mode	16	static
-../Core/Src/esc.c:88:6:esc_set_pwr	16	static
+../Core/Src/esc.c:73:6:esc_is_connected	4	static
+../Core/Src/esc.c:78:6:esc_set_pwr	16	static
+../Core/Src/esc.c:82:6:esc_set_all_nets_mode	24	static
+../Core/Src/esc.c:90:22:invert	16	static
+../Core/Src/esc.c:98:13:esc_set_net_mode	24	static

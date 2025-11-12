@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "app.h"
 #include "adc.h"
 #include "button.h"
@@ -8,24 +10,23 @@
 
 #include "stm32l4xx_hal.h"
 
+#define WAIT_FOR_START_BUTTON
+
 static ADC_HandleTypeDef* h_adc;
 static CAN_HandleTypeDef* h_can;
 static SPI_HandleTypeDef* h_spi;
 static I2C_HandleTypeDef* h_i2c;
 
-static Config_t* h_config;
+static config_t* h_config;
 
 static bool pending_spi_packet = false;
-static bool using_rpi = false;
 
-void test_main() {
-	while (1) {
-		resistance_tests();
-		HAL_GPIO_TogglePin(USER_LED_GPIO_Port, USER_LED_Pin);
-		HAL_Delay(1000);
-	}
-	
-}
+void app_main();
+bool establish_rpi_connection();
+void wait_for_esc_insert();
+void resistance_tests();
+void voltage_tests();
+void lcd_print_failed_nets(adc_measurement_t* measurements, int num_measurements);
 
 void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef* spi, I2C_HandleTypeDef* i2c) {
 	h_adc = adc;
@@ -38,64 +39,144 @@ void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef*
 	adc_init(adc);
 	lcd_init(i2c);
 	esc_set_pwr(FLOATING);
-	esc_set_1v2_source(FLOATING);
-	test_main();
+	adc_set_1v2_source(FLOATING);
+
 	app_main();
 
 }
 
 void app_main(void) {
-
-	while(!rpi_is_awake()) {
-
-	}
-	HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
+	establish_rpi_connection();
+	
 	while(1) {
+		wait_for_esc_insert();
+
+		lcd_printf(LCD_LINE_1, "Press to Start");
 		Press_Type_t press_type = PRESS_TYPE_NONE;
 
 		while(press_type == PRESS_TYPE_NONE) {
-			press_type = wait_on_button(HAL_MAX_DELAY);
+			press_type = wait_on_button(500);
+			if (!esc_is_connected()) {
+				break;
+			}
+		}
+
+		if (!esc_is_connected()) {
+			continue;
 		}
 
 		if (press_type == PRESS_TYPE_SHORT) {
+			lcd_clear_screen();
+			lcd_printf(LCD_LINE_1, "Running Tests");
 			resistance_tests();
-			voltage_tests();
-			app_main();
 		} else if (press_type == PRESS_TYPE_LONG) {
 			rpi_press_power_button();
 		}
+
+		lcd_clear_screen();
 	}
 }
 
-void resistance_tests() {
-	esc_set_pwr(FLOATING);
-	esc_set_1v2_source(CONNECTED);
-	esc_set_swd_mode(MEASURING);
-	esc_set_can_mode(MEASURING);
-	esc_set_all_voltage_nets_mode(RESISTANCE);
+bool establish_rpi_connection() {
+	lcd_clear_screen();
+	lcd_printf(LCD_LINE_1, "Waiting for RPI");
+	lcd_printf(LCD_LINE_2, "Press to Skip");
 
-	float measurements[NUM_RESISTANCE_CHANNELS] = {0};
-	adc_take_resistance_measurements(measurements);
-	// display measuremnts[6] to lcd
-	lcd_set_cursor(LINE1_COL1);
-	lcd_write_string("VMAIN:");
-	lcd_set_cursor(LINE1_COL1 + 7);
-	lcd_write_float(measurements[6], 5);
-	lcd_set_cursor(LINE2_COL1);
-	lcd_write_string("3V3A:");
-	lcd_set_cursor(LINE2_COL1 + 7);
-	lcd_write_float(measurements[2], 5);
-	uint32_t results = config_evaluate_resistances(measurements);
-	//display results
+	Press_Type_t press_type = PRESS_TYPE_NONE;
+
+	while(press_type == PRESS_TYPE_NONE) {
+		press_type = wait_on_button(500);
+		if (rpi_is_awake()) {
+			lcd_clear_screen();
+			lcd_printf(LCD_LINE_1, "RPI Connected");
+			return true;
+		}
+	}
+
+	lcd_clear_screen();
+	lcd_printf(LCD_LINE_1, "RPI Connection");
+	lcd_printf(LCD_LINE_2, "Skipped");
+	HAL_Delay(2000);
+	lcd_clear_screen();
+	return false;
 }
 
-void voltage_tests() {
-	esc_set_pwr(CONNECTED);
-	esc_set_1v2_source(FLOATING);
-	esc_set_all_voltage_nets_mode(VOLTAGE);
+void wait_for_esc_insert() {
+	if (!esc_is_connected()) {
+		lcd_clear_screen();
+		lcd_printf(LCD_LINE_1, "Insert ESC");
 
-	float measurements[NUM_VOLTAGE_CHANNELS] = {0};
-	adc_take_voltage_measurements(measurements);
-	uint32_t results = config_evaluate_voltages(measurements);
-	//display results
+		while (!esc_is_connected()) {
+			HAL_Delay(1);
+		}
+	}
+	lcd_clear_screen();
+}
+
+
+void resistance_tests() {
+	esc_set_pwr(FLOATING);
+	esc_set_all_nets_mode(MEASUREMENT);
+	adc_set_1v2_source(CONNECTED);
+
+
+	adc_measurement_t measurements[NUM_RESISTANCE_CHANNELS] = {0};
+	adc_take_measurements(measurements, RESISTANCE);
+	bool any_failures = config_evaluate_resistances(measurements);
+	rpi_send_debug_info((uint8_t*)measurements, sizeof(measurements));
+	if (any_failures) {
+		lcd_clear_screen();
+		lcd_printf(LCD_LINE_1, "Short Detected");
+		lcd_print_failed_nets(measurements, NUM_RESISTANCE_CHANNELS);
+		while (esc_is_connected()) {
+			lcd_print_failed_nets(measurements, NUM_RESISTANCE_CHANNELS);
+			HAL_Delay(1);
+		}
+		return;
+	} else {
+		voltage_tests();
+	}
+}
+
+
+void voltage_tests() {
+	adc_set_1v2_source(FLOATING);
+	esc_set_all_nets_mode(ORIGINAL);
+	// esc_set_pwr(CONNECTED);
+	esc_set_pwr(FLOATING); //TODO
+
+
+	adc_measurement_t measurements[NUM_VOLTAGE_CHANNELS] = {0};
+	adc_take_measurements(measurements, VOLTAGE);
+	bool any_failures = config_evaluate_voltages(measurements);
+	rpi_send_debug_info((uint8_t*)measurements, sizeof(measurements));
+	if (any_failures) {
+		lcd_clear_screen();
+		lcd_printf(LCD_LINE_1, "Voltage Fault");
+		lcd_print_failed_nets(measurements, NUM_VOLTAGE_CHANNELS);
+	} else {
+		lcd_clear_screen();
+		lcd_printf(LCD_LINE_1, "All Tests Pass");
+		lcd_printf(LCD_LINE_2, "Remove ESC");
+	}
+	while (esc_is_connected()) {
+		lcd_print_failed_nets(measurements, NUM_RESISTANCE_CHANNELS);
+		HAL_Delay(1);
+	}
+	return;
+
+}
+
+void lcd_print_failed_nets(adc_measurement_t* measurements, int num_measurements) {
+	char failed_nets_buf[64];
+	failed_nets_buf[0] = '\0';
+	for (int i = 0; i < num_measurements; i++) {
+		if (measurements[i].result == FAIL) {
+			if (failed_nets_buf[0] != '\0') {
+				strcat(failed_nets_buf, ",");
+			}
+			strcat(failed_nets_buf, measurements[i].name);
+		}
+	}
+	lcd_printf(LCD_LINE_2, "%s", failed_nets_buf);
 }

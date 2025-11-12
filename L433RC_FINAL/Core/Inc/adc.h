@@ -2,14 +2,31 @@
 #define INC_ADC_H_
 
 #include "stm32l4xx_hal.h"
+#include "esc.h"
 
 #define NUM_VOLTAGE_CHANNELS 7
 #define NUM_RESISTANCE_CHANNELS 9
 
+typedef enum {
+    PASS = 0,
+    FAIL = 1
+} adc_result_t;
+
+typedef enum {
+	RESISTANCE = 0,
+	VOLTAGE = 1
+} measurement_type_t;
+
+typedef struct {
+	char* name;
+	float measurement;
+    measurement_type_t type;
+    adc_result_t result;
+} adc_measurement_t;
+
 void adc_init(ADC_HandleTypeDef* adc);
 void adc_set_1v2_source(esc_power_mode_t mode);
-void adc_take_resistance_measurements(float* measurements);
-void adc_take_voltage_measurements(float* measurements);
+void adc_take_measurements(adc_measurement_t* measurements, measurement_type_t type);
 
 
 

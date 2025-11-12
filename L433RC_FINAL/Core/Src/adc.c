@@ -10,44 +10,35 @@ static ADC_HandleTypeDef* h_adc;
 
 #define NUM_SAMPLES 5
 
-static float raw_to_float(uint32_t raw);
+static float raw_to_volts(uint32_t raw);
 static uint32_t adc_read_channel_blocking(uint32_t channel);
 
-uint32_t adc_channels_resistance[] = {
-	ADC_CHANNEL_13, 	//P1V2
-	ADC_CHANNEL_12, 	//P1V8
-	ADC_CHANNEL_8,  	//P3V3_A
-	ADC_CHANNEL_10, 	//P3V3_IO
-	ADC_CHANNEL_6,  	//P5V
-	ADC_CHANNEL_2,  	//P10V
-	ADC_CHANNEL_3,  	//PVMAIN
-	ADC_CHANNEL_15,  	//SWD
-	ADC_CHANNEL_16   	//CAN
+typedef struct {
+	uint32_t channel;
+	char* name;
+} adc_channel_t;
+
+adc_channel_t adc_channels_resistance[] = {
+	{.channel = ADC_CHANNEL_13, .name = "P1V2"},
+	{.channel = ADC_CHANNEL_12, .name = "P1V8"},
+	{.channel = ADC_CHANNEL_8, .name = "P3V3_A"},
+	{.channel = ADC_CHANNEL_10, .name = "P3V3_IO"},
+	{.channel = ADC_CHANNEL_6, .name = "P5V"},
+	{.channel = ADC_CHANNEL_2, .name = "P10V"},
+	{.channel = ADC_CHANNEL_3, .name = "PVMAIN"},
+	{.channel = ADC_CHANNEL_15, .name = "SWD"},
+	{.channel = ADC_CHANNEL_16, .name = "CAN"}
 };
 
-
-uint32_t adc_channels_voltage[] = {
-	ADC_CHANNEL_14, 	//P1V2
-	ADC_CHANNEL_9,  	//P1V8
-	ADC_CHANNEL_5,  	//P3V3_A
-	ADC_CHANNEL_11, 	//P3V3_IO
-	ADC_CHANNEL_7,  	//P5V
-	ADC_CHANNEL_1,  	//P10V
-	ADC_CHANNEL_4  		//PVMAIN
+adc_channel_t adc_channels_voltage[] = {
+	{.channel = ADC_CHANNEL_14, .name = "P1V2"},
+	{.channel = ADC_CHANNEL_9, .name = "P1V8"},
+	{.channel = ADC_CHANNEL_5, .name = "P3V3_A"},
+	{.channel = ADC_CHANNEL_11, .name = "P3V3_IO"},
+	{.channel = ADC_CHANNEL_7, .name = "P5V"},
+	{.channel = ADC_CHANNEL_1, .name = "P10V"},
+	{.channel = ADC_CHANNEL_4, .name = "PVMAIN"}
 };
-
-char *net_names[] = {
-	"P1V2",
-	"P1V8V",
-	"P3V3_A",
-	"P3V3_IO",
-	"P5V",
-	"P10V",
-	"PVMAIN",
-	"SWD",
-	"CAN"
-};
-
 
 // Public
 
@@ -61,35 +52,32 @@ void adc_set_1v2_source(esc_power_mode_t mode) {
     HAL_GPIO_WritePin(EN_1V2_GPIO_Port, EN_1V2_Pin, mode);
 }
 
-void adc_take_resistance_measurements(float* measurements) {
+void adc_take_measurements(adc_measurement_t* measurements, measurement_type_t type) {
+	int num_channels = 0;
+	adc_channel_t* channels = NULL;
+	if (type == RESISTANCE) {
+		num_channels = NUM_RESISTANCE_CHANNELS;
+		channels = adc_channels_resistance;
+	} else if (type == VOLTAGE) {
+		num_channels = NUM_VOLTAGE_CHANNELS;
+		channels = adc_channels_voltage;
+	}
+
 	for (int sample = 0; sample < NUM_SAMPLES; sample++) {
-		for (int net = 0; net < NUM_RESISTANCE_CHANNELS; net++) {
-			uint32_t raw_val = adc_read_channel_blocking(adc_channels_resistance[net]);
-			measurements[net] += raw_to_float(raw_val);
+		for (int net = 0; net < num_channels; net++) {
+			uint32_t raw_val = adc_read_channel_blocking(channels[net].channel);
+			measurements[net].measurement += (raw_to_volts(raw_val) / (float)NUM_SAMPLES);
+			measurements[net].name = channels[net].name;
+			measurements[net].type = type;
 		}
 	}
 
-	for (int net = 0; net < NUM_RESISTANCE_CHANNELS; net++) {
-		measurements[net] = measurements[net] / (float)NUM_SAMPLES;
-	}
-}
 
-void adc_take_voltage_measurements(float* measurements) {
-	for (int sample = 0; sample < NUM_SAMPLES; sample++) {
-		for (int net = 0; net < NUM_VOLTAGE_CHANNELS; net++) {
-			uint32_t raw_val = adc_read_channel_blocking(adc_channels_voltage[net]);
-			measurements[net] += raw_to_float(raw_val);
-		}
-	}
-
-	for (int net = 0; net < NUM_VOLTAGE_CHANNELS; net++) {
-		measurements[net] = measurements[net] / (float)NUM_SAMPLES;    
-	}
 }
 
 // Private 
 
-static float raw_to_float(uint32_t raw) {
+static float raw_to_volts(uint32_t raw) {
 	float scalar = (float)MAX_VOLTS/(float)MAX_ADC_RAW_VAL;
 	return (float)raw * scalar;
 }

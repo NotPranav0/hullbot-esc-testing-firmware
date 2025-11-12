@@ -6,9 +6,7 @@
 #include <stdint.h>
 
 void app_init(ADC_HandleTypeDef* h_adc, CAN_HandleTypeDef* h_can, SPI_HandleTypeDef* h_spi, I2C_HandleTypeDef* h_i2c);
-void app_main(void);
-void resistance_tests();
-void voltage_tests();
+
 
 void error(const char* msg, ...);
 

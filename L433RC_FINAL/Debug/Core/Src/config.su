@@ -1,5 +1,5 @@
-../Core/Src/config.c:33:11:config_init	4	static
-../Core/Src/config.c:64:10:config_evaluate_resistance_threshold	16	static
-../Core/Src/config.c:72:10:config_evaluate_voltage_tolerance	24	static
-../Core/Src/config.c:80:10:config_evaluate_resistances	24	static
-../Core/Src/config.c:96:10:config_evaluate_voltages	24	static
+../Core/Src/config.c:61:11:config_init	8	static
+../Core/Src/config.c:67:6:config_evaluate_resistances	32	static
+../Core/Src/config.c:79:6:config_evaluate_voltages	32	static
+../Core/Src/config.c:91:21:config_evaluate_resistance_threshold	16	static
+../Core/Src/config.c:99:21:config_evaluate_voltage_tolerance	24	static
