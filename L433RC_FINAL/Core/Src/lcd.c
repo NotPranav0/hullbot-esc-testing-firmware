@@ -1,7 +1,24 @@
 #include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
 #include "lcd.h"
 
 static I2C_HandleTypeDef* h_i2c;
+
+static void lcd_set_cursor(uint8_t position);
+static void lcd_write_byte(uint8_t data);
+static void lcd_write_string(char* str);
+static void lcd_prefix();
+static void lcd_display_on();
+static void lcd_display_off();
+static void lcd_home();
+static void lcd_clear_screen();
+static void lcd_set_contrast(uint8_t contrast);
+static void lcd_set_brightness(uint8_t brightness);
+static void lcd_firmware();
+
+
+// Public functions
 
 void lcd_init(I2C_HandleTypeDef* i2c) {
 	h_i2c = i2c;
@@ -14,7 +31,19 @@ void lcd_init(I2C_HandleTypeDef* i2c) {
     lcd_set_brightness(7);
 }
 
-void lcd_write_byte(uint8_t data) {
+void lcd_print(const char* msg, LCD_Line_t line, ...) {
+		char text[16];
+		va_list args;
+		va_start(args, line);
+		vsnprintf(text, sizeof(text), msg, args);
+		va_end(args);
+		lcd_set_cursor(line);
+		lcd_write_string(text);
+}
+
+// Private functions
+
+static void lcd_write_byte(uint8_t data) {
     uint8_t pData[1];
     pData[0] = data;
 
@@ -22,62 +51,64 @@ void lcd_write_byte(uint8_t data) {
 
     HAL_I2C_Master_Transmit(h_i2c, dev_addr, pData, 1, NHD_I2C_TIMEOUT);
 
-    HAL_Delay(1);
+    HAL_Delay(2);
 }
 
-void lcd_write_string(char* str) {
+static void lcd_write_string(char* str) {
     while (*str != '\0') {
     	lcd_write_byte((uint8_t)*str);
         str++;
     }
 }
 
-void lcd_prefix() {
+
+
+static void lcd_prefix() {
     lcd_write_byte(0xFE);
 }
 
 
-void lcd_display_on() {
+static void lcd_display_on() {
     lcd_prefix();
     lcd_write_byte(0x41);
 }
 
-void lcd_display_off() {
+static void lcd_display_off() {
 	lcd_prefix();
 	lcd_write_byte(0x42);
 }
 
 
-void lcd_set_cursor(uint8_t position) {
+static void lcd_set_cursor(uint8_t position) {
 	lcd_prefix();
 	lcd_write_byte(0x45);
 	lcd_write_byte(position);
 }
 
-void lcd_home() {
+static void lcd_home() {
 	lcd_prefix();
     lcd_write_byte(0x46);
 }
 
-void lcd_clear_screen() {
+static void lcd_clear_screen() {
 	lcd_prefix();
 	lcd_write_byte(0x51);
 	HAL_Delay(2);
 }
 
-void lcd_set_contrast(uint8_t contrast) {
+static void lcd_set_contrast(uint8_t contrast) {
 	lcd_prefix();
 	lcd_write_byte(0x52);
 	lcd_write_byte(contrast);
 }
 
-void lcd_set_brightness(uint8_t brightness) {
+static void lcd_set_brightness(uint8_t brightness) {
 	lcd_prefix();
 	lcd_write_byte(0x53);
 	lcd_write_byte(brightness);
 }
 
-void lcd_firmware() {
+static void lcd_firmware() {
 	lcd_prefix();
 	lcd_write_byte(0x70);
 }

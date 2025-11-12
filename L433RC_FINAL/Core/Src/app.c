@@ -16,14 +16,15 @@ static I2C_HandleTypeDef* h_i2c;
 static Config_t* h_config;
 
 static bool pending_spi_packet = false;
+static bool using_rpi = false;
 
-void lcd_test() {
-	lcd_clear_screen();
-	lcd_set_cursor(LINE1_COL1);
-	lcd_write_string("ESC TESTER");
+void test_main() {
 	while (1) {
+		resistance_tests();
+		HAL_GPIO_TogglePin(USER_LED_GPIO_Port, USER_LED_Pin);
 		HAL_Delay(1000);
 	}
+	
 }
 
 void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef* spi, I2C_HandleTypeDef* i2c) {
@@ -38,15 +39,13 @@ void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef*
 	lcd_init(i2c);
 	esc_set_pwr(FLOATING);
 	esc_set_1v2_source(FLOATING);
-	lcd_test();
+	test_main();
 	app_main();
 
 }
 
-void resistance_tests();
-void voltage_tests();
-
 void app_main(void) {
+
 	while(!rpi_is_awake()) {
 
 	}
@@ -55,7 +54,7 @@ void app_main(void) {
 		Press_Type_t press_type = PRESS_TYPE_NONE;
 
 		while(press_type == PRESS_TYPE_NONE) {
-			press_type = WaitFor_Button_Press();
+			press_type = wait_on_button(HAL_MAX_DELAY);
 		}
 
 		if (press_type == PRESS_TYPE_SHORT) {
@@ -77,6 +76,15 @@ void resistance_tests() {
 
 	float measurements[NUM_RESISTANCE_CHANNELS] = {0};
 	adc_take_resistance_measurements(measurements);
+	// display measuremnts[6] to lcd
+	lcd_set_cursor(LINE1_COL1);
+	lcd_write_string("VMAIN:");
+	lcd_set_cursor(LINE1_COL1 + 7);
+	lcd_write_float(measurements[6], 5);
+	lcd_set_cursor(LINE2_COL1);
+	lcd_write_string("3V3A:");
+	lcd_set_cursor(LINE2_COL1 + 7);
+	lcd_write_float(measurements[2], 5);
 	uint32_t results = config_evaluate_resistances(measurements);
 	//display results
 }

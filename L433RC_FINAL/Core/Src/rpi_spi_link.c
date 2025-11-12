@@ -122,15 +122,12 @@ void rpi_press_power_button(void) {
 
 
 bool rpi_is_awake(void) {
-	for (int i = 0; i < 3; i++) {
-		const char* text = "ping";
-		send_packet_to_pi(PING, (const uint8_t*)text, strlen(text));
-		HAL_Delay(500);
-		if (*h_packet_recieved) {
-			*h_packet_recieved = false;
-			return true;
-		}
-
+	const char* text = "ping";
+	send_packet_to_pi(PING, (const uint8_t*)text, strlen(text));
+	HAL_Delay(500);
+	if (*h_packet_recieved) {
+		*h_packet_recieved = false;
+		return true;
 	}
 	return false;
 }

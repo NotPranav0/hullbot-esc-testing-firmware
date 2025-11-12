@@ -1,5 +1,6 @@
 #include "adc.h"
 #include "stm32l4xx_hal.h"
+#include "main.h"
 
 static ADC_HandleTypeDef* h_adc;
 
@@ -9,10 +10,8 @@ static ADC_HandleTypeDef* h_adc;
 
 #define NUM_SAMPLES 5
 
-float raw_to_float(uint32_t raw) {
-	float scalar = (float)MAX_VOLTS/(float)MAX_ADC_RAW_VAL;
-	return (float)raw * scalar;
-}
+static float raw_to_float(uint32_t raw);
+static uint32_t adc_read_channel_blocking(uint32_t channel);
 
 uint32_t adc_channels_resistance[] = {
 	ADC_CHANNEL_13, 	//P1V2
@@ -49,29 +48,17 @@ char *net_names[] = {
 	"CAN"
 };
 
+
+// Public
+
 void adc_init(ADC_HandleTypeDef* adc) {
 	h_adc = adc;
 
 	HAL_ADCEx_Calibration_Start(h_adc, ADC_SINGLE_ENDED);
 }
 
-uint32_t adc_read_channel_blocking(uint32_t channel)
-{
-	ADC_ChannelConfTypeDef sConfig = {0};
-	sConfig.Channel = channel;
-	sConfig.Rank = ADC_REGULAR_RANK_1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
-	sConfig.SingleDiff = ADC_SINGLE_ENDED;
-	sConfig.OffsetNumber = ADC_OFFSET_NONE;
-	sConfig.Offset = 0;
-	HAL_ADC_ConfigChannel(h_adc, &sConfig);
-
-	HAL_ADC_Start(h_adc);
-	HAL_ADC_PollForConversion(h_adc, HAL_MAX_DELAY);
-	uint32_t raw = HAL_ADC_GetValue(h_adc);
-	HAL_ADC_Stop(h_adc);
-
-	return raw;
+void adc_set_1v2_source(esc_power_mode_t mode) {
+    HAL_GPIO_WritePin(EN_1V2_GPIO_Port, EN_1V2_Pin, mode);
 }
 
 void adc_take_resistance_measurements(float* measurements) {
@@ -100,6 +87,27 @@ void adc_take_voltage_measurements(float* measurements) {
 	}
 }
 
+// Private 
 
+static float raw_to_float(uint32_t raw) {
+	float scalar = (float)MAX_VOLTS/(float)MAX_ADC_RAW_VAL;
+	return (float)raw * scalar;
+}
 
+static uint32_t adc_read_channel_blocking(uint32_t channel) {
+	ADC_ChannelConfTypeDef sConfig = {0};
+	sConfig.Channel = channel;
+	sConfig.Rank = ADC_REGULAR_RANK_1;
+	sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
+	sConfig.SingleDiff = ADC_SINGLE_ENDED;
+	sConfig.OffsetNumber = ADC_OFFSET_NONE;
+	sConfig.Offset = 0;
+	HAL_ADC_ConfigChannel(h_adc, &sConfig);
 
+	HAL_ADC_Start(h_adc);
+	HAL_ADC_PollForConversion(h_adc, HAL_MAX_DELAY);
+	uint32_t raw = HAL_ADC_GetValue(h_adc);
+	HAL_ADC_Stop(h_adc);
+
+	return raw;
+}

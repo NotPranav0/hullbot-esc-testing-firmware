@@ -7,9 +7,10 @@
 #define NUM_RESISTANCE_CHANNELS 9
 
 void adc_init(ADC_HandleTypeDef* adc);
+void adc_set_1v2_source(esc_power_mode_t mode);
 void adc_take_resistance_measurements(float* measurements);
 void adc_take_voltage_measurements(float* measurements);
 
-uint32_t adc_read_channel_blocking(uint32_t channel);
+
 
 #endif /* INC_ADC_H_ */

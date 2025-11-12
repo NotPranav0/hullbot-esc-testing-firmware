@@ -1,0 +1,96 @@
+#include "app.h"
+#include "adc.h"
+#include "button.h"
+#include "esc.h"
+#include "rpi_spi_link.h"
+#include "lcd.h"
+#include "config.h"
+
+#include "stm32l4xx_hal.h"
+
+static ADC_HandleTypeDef* h_adc;
+static CAN_HandleTypeDef* h_can;
+static SPI_HandleTypeDef* h_spi;
+static I2C_HandleTypeDef* h_i2c;
+
+static Config_t* h_config;
+
+static bool pending_spi_packet = false;
+
+void test_main() {
+	while (1) {
+		resistance_tests();
+		HAL_GPIO_TogglePin(USER_LED_GPIO_Port, USER_LED_Pin);
+		HAL_Delay(1000);
+	}
+	
+}
+
+void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef* spi, I2C_HandleTypeDef* i2c) {
+	h_adc = adc;
+	h_can = can;
+	h_spi = spi;
+	h_i2c = i2c;
+
+	h_config = config_init();
+	link_init(spi, &pending_spi_packet, h_config);
+	adc_init(adc);
+	lcd_init(i2c);
+	esc_set_pwr(FLOATING);
+	esc_set_1v2_source(FLOATING);
+	test_main();
+	app_main();
+
+}
+
+void app_main(void) {
+	while(!rpi_is_awake()) {
+
+	}
+	HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
+	while(1) {
+		Press_Type_t press_type = PRESS_TYPE_NONE;
+
+		while(press_type == PRESS_TYPE_NONE) {
+			press_type = WaitFor_Button_Press();
+		}
+
+		if (press_type == PRESS_TYPE_SHORT) {
+			resistance_tests();
+			voltage_tests();
+			app_main();
+		} else if (press_type == PRESS_TYPE_LONG) {
+			rpi_press_power_button();
+		}
+	}
+}
+
+void resistance_tests() {
+	esc_set_pwr(FLOATING);
+	esc_set_1v2_source(CONNECTED);
+	esc_set_swd_mode(MEASURING);
+	esc_set_can_mode(MEASURING);
+	esc_set_all_voltage_nets_mode(RESISTANCE);
+
+	float measurements[NUM_RESISTANCE_CHANNELS] = {0};
+	adc_take_resistance_measurements(measurements);
+	// display measuremnts[6] to lcd
+	lcd_set_cursor(LINE1_COL1);
+	lcd_write_string("VMAIN:");
+	lcd_set_cursor(LINE1_COL1 + 8);
+	lcd_set_cursor(LINE2_COL1);
+	lcd_write_float(measurements[6], 5);
+	uint32_t results = config_evaluate_resistances(measurements);
+	//display results
+}
+
+void voltage_tests() {
+	esc_set_pwr(CONNECTED);
+	esc_set_1v2_source(FLOATING);
+	esc_set_all_voltage_nets_mode(VOLTAGE);
+
+	float measurements[NUM_VOLTAGE_CHANNELS] = {0};
+	adc_take_voltage_measurements(measurements);
+	uint32_t results = config_evaluate_voltages(measurements);
+	//display results
+}

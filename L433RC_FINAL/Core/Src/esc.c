@@ -5,6 +5,10 @@
 
 
 #define ESC_VOLTAGE_NET_COUNT 7
+
+static void esc_set_voltage_net_mode(esc_voltage_net_t net, esc_voltage_net_mode_t mode);
+static GPIO_PinState invert(GPIO_PinState state);
+
 // for resistive modes invert
 GPIO_PinState voltage_nets_modes[] = {
 	GPIO_PIN_RESET,
@@ -36,29 +40,17 @@ GPIO_TypeDef *voltage_net_ports[] = {
     ESC_PVMAIN_SEL_GPIO_Port
 };
 
-GPIO_PinState invert(GPIO_PinState state) {
-	if (state == GPIO_PIN_RESET) {
-		return GPIO_PIN_SET;
-	} else {
-		return GPIO_PIN_RESET;
-	}
-}
+
 
 bool esc_is_connected() {
 	return (HAL_GPIO_ReadPin(ESC_DET_GPIO_Port, ESC_DET_Pin) == GPIO_PIN_RESET);
 }
 
-void esc_set_1v2_source(esc_power_mode_t mode) {
-    HAL_GPIO_WritePin(EN_1V2_GPIO_Port, EN_1V2_Pin, mode);
+void esc_set_pwr(esc_power_mode_t mode) {
+	HAL_GPIO_WritePin(ESC_PWR_SEL_GPIO_Port, ESC_PWR_SEL_Pin, mode);
 }
 
-void esc_set_voltage_net_mode(esc_voltage_net_t net, esc_voltage_net_mode_t mode) {
-    if (mode == VOLTAGE) {
-		HAL_GPIO_WritePin(voltage_net_ports[net], voltage_net_pins[net], voltage_nets_modes[net]);
-	} else if (mode == RESISTANCE) {
-		HAL_GPIO_WritePin(voltage_net_ports[net], voltage_net_pins[net], invert(voltage_nets_modes[net]));
-	}
-}
+
 void esc_set_all_voltage_nets_mode(esc_voltage_net_mode_t mode) {
 	for (esc_voltage_net_t net = 0; net < ESC_VOLTAGE_NET_COUNT; net++) {
 		esc_set_voltage_net_mode(net, mode);
@@ -85,6 +77,20 @@ void esc_set_can_mode(esc_comms_mode_t mode) {
     }
 }
 
-void esc_set_pwr(esc_power_mode_t mode) {
-	HAL_GPIO_WritePin(ESC_PWR_SEL_GPIO_Port, ESC_PWR_SEL_Pin, mode);
+// Private
+
+static GPIO_PinState invert(GPIO_PinState state) {
+    if (state == GPIO_PIN_RESET) {
+        return GPIO_PIN_SET;
+    } else {
+        return GPIO_PIN_RESET;
+    }
+}
+
+static void esc_set_voltage_net_mode(esc_voltage_net_t net, esc_voltage_net_mode_t mode) {
+    if (mode == VOLTAGE) {
+		HAL_GPIO_WritePin(voltage_net_ports[net], voltage_net_pins[net], voltage_nets_modes[net]);
+	} else if (mode == RESISTANCE) {
+		HAL_GPIO_WritePin(voltage_net_ports[net], voltage_net_pins[net], invert(voltage_nets_modes[net]));
+	}
 }

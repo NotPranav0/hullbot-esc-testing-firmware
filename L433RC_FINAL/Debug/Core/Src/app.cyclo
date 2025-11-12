@@ -1,5 +1,5 @@
-../Core/Src/app.c:20:6:lcd_test	1
+../Core/Src/app.c:20:6:test_main	1
 ../Core/Src/app.c:29:6:app_init	1
-../Core/Src/app.c:49:6:app_main	5
-../Core/Src/app.c:71:6:resistance_tests	1
-../Core/Src/app.c:84:6:voltage_tests	1
+../Core/Src/app.c:46:6:app_main	5
+../Core/Src/app.c:68:6:resistance_tests	1
+../Core/Src/app.c:90:6:voltage_tests	1

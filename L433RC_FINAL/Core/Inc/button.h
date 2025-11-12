@@ -1,9 +1,7 @@
 #ifndef INC_BUTTON_H_
 #define INC_BUTTON_H_
 
-
-#define DEBOUNCE_TIME   50
-#define LONG_PRESS_TIME 500
+#include <stdint.h>
 
 typedef enum {
     PRESS_TYPE_NONE,
@@ -11,6 +9,6 @@ typedef enum {
     PRESS_TYPE_LONG
 } Press_Type_t;
 
-Press_Type_t WaitFor_Button_Press(void);
+Press_Type_t wait_on_button(uint32_t timeout);
 
 #endif /* INC_BUTTON_H_ */

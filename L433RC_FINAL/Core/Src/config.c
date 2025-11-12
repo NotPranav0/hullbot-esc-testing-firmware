@@ -30,6 +30,11 @@ const float P5V_V_TOLERANCE_DEFAULT = 0;
 const float P10V_V_TOLERANCE_DEFAULT = 0;
 const float PVMAIN_V_TOLERANCE_DEFAULT = 0;
 
+static uint32_t config_evaluate_resistance_threshold(float measurement, float threshold);
+static uint32_t config_evaluate_voltage_tolerance(float measurement, float expected, float tolerance);
+
+// Public
+
 Config_t* config_init() {
 	config.P1V2_R_THRESHOLD = P1V2_R_THRESHOLD_DEFAULT;
 	config.P1V8_R_THRESHOLD = P1V8_R_THRESHOLD_DEFAULT;
@@ -60,23 +65,6 @@ Config_t* config_init() {
 	return &config;
 }
 
-
-uint32_t config_evaluate_resistance_threshold(float measurement, float threshold) {
-	if (measurement >= threshold) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
-uint32_t config_evaluate_voltage_tolerance(float measurement, float expected, float tolerance) {
-	if (measurement >= (expected - tolerance) && measurement <= (expected + tolerance)) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
 uint32_t config_evaluate_resistances(float* measurements) {
 	uint32_t results = 0;
 
@@ -105,5 +93,23 @@ uint32_t config_evaluate_voltages(float* measurements) {
 	results |= (config_evaluate_voltage_tolerance(measurements[6], config.PVMAIN_V_EXPECTED, config.PVMAIN_V_TOLERANCE) << 6);
 
 	return results;
+}
+
+// Private
+
+static uint32_t config_evaluate_resistance_threshold(float measurement, float threshold) {
+	if (measurement >= threshold) {
+		return 1; // Pass
+	} else {
+		return 0; // Fail
+	}
+}
+
+static uint32_t config_evaluate_voltage_tolerance(float measurement, float expected, float tolerance) {
+	if (measurement >= (expected - tolerance) && measurement <= (expected + tolerance)) {
+		return 1; // Pass
+	} else {
+		return 0; // Fail
+	}
 }
 

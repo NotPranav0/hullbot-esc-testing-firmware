@@ -61,7 +61,7 @@ main-build: L433RC_FINAL.elf secondary-outputs
 
 # Tool invocations
 L433RC_FINAL.elf L433RC_FINAL.map: $(OBJS) $(USER_OBJS) C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

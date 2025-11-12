@@ -35,16 +35,14 @@ typedef enum
 } esc_comms_mode_t;
 
 bool esc_is_connected(void);
+void esc_set_pwr(esc_power_mode_t mode);
 
-void esc_set_1v2_source(esc_power_mode_t mode);
-
-void esc_set_voltage_net_mode(esc_voltage_net_t net, esc_voltage_net_mode_t mode);
 void esc_set_all_voltage_nets_mode(esc_voltage_net_mode_t mode);
 
 void esc_set_swd_mode(esc_comms_mode_t mode);
 void esc_set_can_mode(esc_comms_mode_t mode);
 
-void esc_set_pwr(esc_power_mode_t mode);
+
 
 #endif /* INC_ESC_H_ */
 
