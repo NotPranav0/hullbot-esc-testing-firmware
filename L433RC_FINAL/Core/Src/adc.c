@@ -4,11 +4,11 @@
 
 static ADC_HandleTypeDef* h_adc;
 
-#define ADC_BITS 12
-#define MAX_VOLTS 3.3
+#define ADC_BITS 		12
+#define MAX_VOLTS 		3.3
 #define MAX_ADC_RAW_VAL ((1 << ADC_BITS) - 1)
 
-#define NUM_SAMPLES 5
+#define NUM_SAMPLES 	10 // Number of samples to average per measurement
 
 static float raw_to_volts(uint32_t raw);
 static uint32_t adc_read_channel_blocking(uint32_t channel);
@@ -17,6 +17,10 @@ typedef struct {
 	uint32_t channel;
 	char* name;
 } adc_channel_t;
+
+/*
+ADC Channel to Net Name mapping
+*/
 
 adc_channel_t adc_channels_resistance[] = {
 	{.channel = ADC_CHANNEL_13, .name = "P1V2"},
@@ -41,17 +45,31 @@ adc_channel_t adc_channels_voltage[] = {
 };
 
 // Public
-
+/*
+	Initializes ADC peripheral, performs calibration
+	@param adc: Pointer to ADC handle
+*/
 void adc_init(ADC_HandleTypeDef* adc) {
 	h_adc = adc;
 
 	HAL_ADCEx_Calibration_Start(h_adc, ADC_SINGLE_ENDED);
 }
 
+/*
+	Enables or Disconnects 1.2V rail on jig pcb
+	@param mode: CONNECTED enables 1.2v
+	              FLOATING disables 1.2v
+*/
 void adc_set_1v2_source(esc_power_mode_t mode) {
     HAL_GPIO_WritePin(EN_1V2_GPIO_Port, EN_1V2_Pin, mode);
 }
 
+/*
+	Takes measurements on all ADC channels of specified type
+	@param measurements: Pointer to array of adc_measurement_t structs to store results, 
+	use NUM_RESISTANCE_CHANNELS or NUM_VOLTAGE_CHANNELS for size.
+	@param type: Type of measurement to take (RESISTANCE or VOLTAGE)
+*/
 void adc_take_measurements(adc_measurement_t* measurements, measurement_type_t type) {
 	int num_channels = 0;
 	adc_channel_t* channels = NULL;
@@ -77,11 +95,22 @@ void adc_take_measurements(adc_measurement_t* measurements, measurement_type_t t
 
 // Private 
 
+/*
+	Converts raw ADC value to voltage
+	@param raw: Raw ADC value
+	@return Voltage corresponding to raw ADC value
+
+*/
 static float raw_to_volts(uint32_t raw) {
 	float scalar = (float)MAX_VOLTS/(float)MAX_ADC_RAW_VAL;
 	return (float)raw * scalar;
 }
 
+/*
+	Reads one ADC channel (blocking)
+	@param channel: ADC channel to read
+	@return Raw ADC value read from channel
+*/
 static uint32_t adc_read_channel_blocking(uint32_t channel) {
 	ADC_ChannelConfTypeDef sConfig = {0};
 	sConfig.Channel = channel;

@@ -4,14 +4,20 @@
 #include "stm32l4xx_hal.h"
 #include "main.h"
 
-#define DEBOUNCE_TIME   50
-#define LONG_PRESS_TIME 500
+#define DEBOUNCE_TIME   50 
+#define LONG_PRESS_TIME 500 // Time in ms to consider a press as long press
 
+
+/*
+    Waits for button press or timeout
+    @param timeout: Maximum time to wait for button press (ms)
+    @return PRESS_TYPE_SHORT if short press detected
+            PRESS_TYPE_LONG if long press detected
+            PRESS_TYPE_NONE if timeout expired before press, or if press was a glitch
+*/
 Press_Type_t wait_on_button(uint32_t timeout) {
-    uint32_t press_start_tick;
     bool long_press_detected = false;
 
-    // Get the time at the start of the function call
     uint32_t function_start_tick = HAL_GetTick();
 
     while (HAL_GPIO_ReadPin(START_BUTTON_GPIO_Port, START_BUTTON_Pin) == GPIO_PIN_SET) {
@@ -19,23 +25,22 @@ Press_Type_t wait_on_button(uint32_t timeout) {
 
         // Check if the timeout has expired
         if (HAL_GetTick() - function_start_tick >= timeout) {
-            return PRESS_TYPE_NONE; // Timeout expired, no press detected
+            return PRESS_TYPE_NONE;
         }
 
-        // Add a small delay to prevent this loop from consuming 100% CPU
         HAL_Delay(1);
     }
 
     // Button is low. Start debounce timer.
     HAL_Delay(DEBOUNCE_TIME);
 
-    // If pin is HIGH, it was a glitch. Return NONE.
+    // If pin is HIGH, it was a glitch.
     if (HAL_GPIO_ReadPin(START_BUTTON_GPIO_Port, START_BUTTON_Pin) == GPIO_PIN_SET) {
         return PRESS_TYPE_NONE;
     }
 
     //Press is confirmed. Wait for release
-    press_start_tick = HAL_GetTick();
+    uint32_t press_start_tick = HAL_GetTick();
 
     while (HAL_GPIO_ReadPin(START_BUTTON_GPIO_Port, START_BUTTON_Pin) == GPIO_PIN_RESET) {
         // Button is still being held down
@@ -46,10 +51,9 @@ Press_Type_t wait_on_button(uint32_t timeout) {
             long_press_detected = true;
         }
 
-        HAL_Delay(5);
+        HAL_Delay(1);
     }
 
-    //Button has been released. Debounce release.
     HAL_Delay(DEBOUNCE_TIME);
 
     if (long_press_detected) {

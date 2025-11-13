@@ -1,7 +1,7 @@
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
-configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:ALCRT_RX (1),org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:ALCRT_RX,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:ALCRT_TX,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:L432KC_LCD Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:L433RC_FINAL Debug
+configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:L433RC_FINAL Debug
 eclipse.preferences.version=1
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:ALCRT_Comms_Test\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:ALCRT_Comms_Test\ Debug/activeLaunchTarget=null\:---
@@ -19,6 +19,7 @@ org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:L432KC_DMA\ Debug/activeLaunchT
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:L433RC_BLINK\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:L433RC_BLINK/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:L433RC_FINAL\ Debug/activeLaunchMode=run
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:L433RC_FINAL\ Debug/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:L433RC_INTEGRATED\ Debug/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:RX/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:stlink-test\ Debug/activeLaunchMode=run

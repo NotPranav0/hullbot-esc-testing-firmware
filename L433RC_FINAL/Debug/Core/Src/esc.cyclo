@@ -1,5 +1,5 @@
-../Core/Src/esc.c:73:6:esc_is_connected	1
-../Core/Src/esc.c:78:6:esc_set_pwr	1
-../Core/Src/esc.c:82:6:esc_set_all_nets_mode	2
-../Core/Src/esc.c:90:22:invert	2
-../Core/Src/esc.c:98:13:esc_set_net_mode	3
+../Core/Src/esc.c:82:6:esc_is_connected	1
+../Core/Src/esc.c:92:6:esc_set_pwr	1
+../Core/Src/esc.c:100:6:esc_set_all_nets_mode	2
+../Core/Src/esc.c:113:22:invert	2
+../Core/Src/esc.c:126:13:esc_set_net_mode	3

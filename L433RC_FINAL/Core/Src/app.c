@@ -27,7 +27,18 @@ void wait_for_esc_insert();
 void resistance_tests();
 void voltage_tests();
 void lcd_print_failed_nets(adc_measurement_t* measurements, int num_measurements);
+void debug_lcd_print_measurements(adc_measurement_t* measurements);
 
+void test_main() {
+	while(1) {
+		resistance_tests();
+		Press_Type_t press_type = PRESS_TYPE_NONE;
+		press_type = wait_on_button(500);
+		if (press_type != PRESS_TYPE_NONE) {
+			HAL_GPIO_TogglePin(EN_1V2_GPIO_Port, EN_1V2_Pin);
+		}
+	}
+}
 void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef* spi, I2C_HandleTypeDef* i2c) {
 	h_adc = adc;
 	h_can = can;
@@ -40,6 +51,8 @@ void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef*
 	lcd_init(i2c);
 	esc_set_pwr(FLOATING);
 	adc_set_1v2_source(FLOATING);
+
+	test_main();
 
 	app_main();
 
@@ -77,6 +90,9 @@ void app_main(void) {
 	}
 }
 
+/*
+	Establish connection with RPI, or skip if button pressed
+ */
 bool establish_rpi_connection() {
 	lcd_clear_screen();
 	lcd_printf(LCD_LINE_1, "Waiting for RPI");
@@ -96,11 +112,14 @@ bool establish_rpi_connection() {
 	lcd_clear_screen();
 	lcd_printf(LCD_LINE_1, "RPI Connection");
 	lcd_printf(LCD_LINE_2, "Skipped");
-	HAL_Delay(2000);
+	HAL_Delay(1500);
 	lcd_clear_screen();
 	return false;
 }
 
+/*
+	Wait for ESC to be inserted (blocking)
+ */
 void wait_for_esc_insert() {
 	if (!esc_is_connected()) {
 		lcd_clear_screen();
@@ -113,15 +132,27 @@ void wait_for_esc_insert() {
 	lcd_clear_screen();
 }
 
-
+/*
+	Run resistance tests
+	1. Set ESC to measurement mode
+	2. Take resistance measurements
+	3. Evaluate results
+	4. If any failures, display on LCD and wait for ESC removal
+	5. If all pass, proceed to voltage tests
+ */
 void resistance_tests() {
 	esc_set_pwr(FLOATING);
 	esc_set_all_nets_mode(MEASUREMENT);
-	adc_set_1v2_source(CONNECTED);
+	//adc_set_1v2_source(CONNECTED);
 
 
 	adc_measurement_t measurements[NUM_RESISTANCE_CHANNELS] = {0};
 	adc_take_measurements(measurements, RESISTANCE);
+
+	debug_lcd_print_measurements(measurements);
+
+	return;
+
 	bool any_failures = config_evaluate_resistances(measurements);
 	rpi_send_debug_info((uint8_t*)measurements, sizeof(measurements));
 	if (any_failures) {
@@ -138,7 +169,14 @@ void resistance_tests() {
 	}
 }
 
-
+/*
+	Run voltage tests
+	1. Set ESC to original mode
+	2. Take voltage measurements
+	3. Evaluate results
+	4. If any failures, display on LCD and wait for ESC removal
+	5. If all pass, display success message and wait for ESC removal
+ */
 void voltage_tests() {
 	adc_set_1v2_source(FLOATING);
 	esc_set_all_nets_mode(ORIGINAL);
@@ -167,6 +205,9 @@ void voltage_tests() {
 
 }
 
+/*
+	Print names of failed nets to LCD line 2
+ */
 void lcd_print_failed_nets(adc_measurement_t* measurements, int num_measurements) {
 	char failed_nets_buf[64];
 	failed_nets_buf[0] = '\0';
@@ -179,4 +220,9 @@ void lcd_print_failed_nets(adc_measurement_t* measurements, int num_measurements
 		}
 	}
 	lcd_printf(LCD_LINE_2, "%s", failed_nets_buf);
+}
+
+void debug_lcd_print_measurements(adc_measurement_t* measurements) {
+	lcd_printf(LCD_LINE_1, "%s:%.7f", measurements[2].name, measurements[2].measurement);
+	lcd_printf(LCD_LINE_2, "%s:%.7f", measurements[6].name, measurements[6].measurement);
 }

@@ -4,9 +4,9 @@
 
 #include <stdbool.h>
 
-
 #define ESC_NET_COUNT 11
 
+// ESC net to index mapping
 typedef enum {
     ESC_P1V2 = 0U,
     ESC_P1V8,
@@ -24,23 +24,9 @@ typedef enum {
 static void esc_set_net_mode(esc_net_t net, esc_net_mode_t mode);
 static GPIO_PinState invert(GPIO_PinState state);
 
-
-
-// invert for resistive measuring mode  
-GPIO_PinState esc_nets_original_modes[] = {
-	GPIO_PIN_RESET,
-	GPIO_PIN_SET,
-	GPIO_PIN_SET,
-	GPIO_PIN_RESET,
-	GPIO_PIN_RESET,
-	GPIO_PIN_RESET,
-	GPIO_PIN_SET,
-    GPIO_PIN_RESET,
-    GPIO_PIN_SET,
-    GPIO_PIN_RESET,
-    GPIO_PIN_SET
-};
-
+/*
+    Control pins for ESC nets
+*/
 uint16_t esc_net_pins[] = {
     ESC_P1V2_SEL_Pin,
     ESC_P1V8_SEL_Pin,
@@ -70,15 +56,47 @@ GPIO_TypeDef *esc_net_ports[] = {
 };
 
 
+/*
+    Required state of control pins for original/intented ESC net modes
+    Invert for measurement mode
+*/
+GPIO_PinState esc_nets_original_modes[] = {
+	GPIO_PIN_RESET,
+	GPIO_PIN_SET,
+	GPIO_PIN_SET,
+	GPIO_PIN_RESET,
+	GPIO_PIN_RESET,
+	GPIO_PIN_RESET,
+	GPIO_PIN_SET,
+    GPIO_PIN_RESET,
+    GPIO_PIN_SET,
+    GPIO_PIN_RESET,
+    GPIO_PIN_SET
+};
+
+// Public
+
+/*
+    Check if ESC is connected
+*/
 bool esc_is_connected() {
 	//return (HAL_GPIO_ReadPin(ESC_DET_GPIO_Port, ESC_DET_Pin) == GPIO_PIN_RESET);
 	return true; //TODO
 }
 
+/*
+    Set ESC power mode
+    @param mode: ESC power mode. CONNECTED or FLOATING
+
+*/
 void esc_set_pwr(esc_power_mode_t mode) {
 	HAL_GPIO_WritePin(ESC_PWR_SEL_GPIO_Port, ESC_PWR_SEL_Pin, mode);
 }
 
+/*
+    Set mode for all ESC nets
+    @param mode: ESC net mode. ORIGINAL or MEASUREMENT
+*/
 void esc_set_all_nets_mode(esc_net_mode_t mode) {
 	for (esc_net_t net = 0; net < ESC_NET_COUNT; net++) {
 		esc_set_net_mode(net, mode);
@@ -87,6 +105,11 @@ void esc_set_all_nets_mode(esc_net_mode_t mode) {
 
 // Private
 
+/*
+    Invert GPIO pin state
+    @param state: Current GPIO pin state
+    @return Inverted GPIO pin state
+*/
 static GPIO_PinState invert(GPIO_PinState state) {
     if (state == GPIO_PIN_RESET) {
         return GPIO_PIN_SET;
@@ -95,6 +118,11 @@ static GPIO_PinState invert(GPIO_PinState state) {
     }
 }
 
+/*
+    Set mode for a specific ESC net
+    @param net: ESC net to set mode for
+    @param mode: ESC net mode. ORIGINAL or MEASUREMENT
+*/
 static void esc_set_net_mode(esc_net_t net, esc_net_mode_t mode) {
     if (mode == ORIGINAL) {
 		HAL_GPIO_WritePin(esc_net_ports[net], esc_net_pins[net], esc_nets_original_modes[net]);

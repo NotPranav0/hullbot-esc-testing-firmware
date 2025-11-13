@@ -1,7 +1,9 @@
-../Core/Src/app.c:31:6:app_init	1
-../Core/Src/app.c:48:6:app_main	6
-../Core/Src/app.c:80:6:establish_rpi_connection	3
-../Core/Src/app.c:104:6:wait_for_esc_insert	3
-../Core/Src/app.c:117:6:resistance_tests	3
-../Core/Src/app.c:142:6:voltage_tests	3
-../Core/Src/app.c:170:6:lcd_print_failed_nets	4
+../Core/Src/app.c:32:6:test_main	2
+../Core/Src/app.c:42:6:app_init	1
+../Core/Src/app.c:61:6:app_main	6
+../Core/Src/app.c:93:6:establish_rpi_connection	3
+../Core/Src/app.c:117:6:wait_for_esc_insert	3
+../Core/Src/app.c:130:6:resistance_tests	1
+../Core/Src/app.c:160:6:voltage_tests	3
+../Core/Src/app.c:188:6:lcd_print_failed_nets	4
+../Core/Src/app.c:202:6:debug_lcd_print_measurements	1
