@@ -52,7 +52,7 @@ void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef*
 	esc_set_pwr(FLOATING);
 	adc_set_1v2_source(FLOATING);
 
-	test_main();
+	//test_main();
 
 	app_main();
 
@@ -143,15 +143,11 @@ void wait_for_esc_insert() {
 void resistance_tests() {
 	esc_set_pwr(FLOATING);
 	esc_set_all_nets_mode(MEASUREMENT);
-	//adc_set_1v2_source(CONNECTED);
+	adc_set_1v2_source(CONNECTED);
 
 
 	adc_measurement_t measurements[NUM_RESISTANCE_CHANNELS] = {0};
 	adc_take_measurements(measurements, RESISTANCE);
-
-	debug_lcd_print_measurements(measurements);
-
-	return;
 
 	bool any_failures = config_evaluate_resistances(measurements);
 	rpi_send_debug_info((uint8_t*)measurements, sizeof(measurements));

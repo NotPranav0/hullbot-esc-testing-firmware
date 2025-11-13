@@ -8,36 +8,36 @@ static config_t config;
 	Default Resistance Thresholds (Ohms)
 	Measured Resistance must be > threshold to PASS
 */
-const float P1V2_R_THRESHOLD_DEFAULT = 0;
-const float P1V8_R_THRESHOLD_DEFAULT = 0;
-const float P3V3A_R_THRESHOLD_DEFAULT = 0;
-const float P3V3IO_R_THRESHOLD_DEFAULT = 0;
-const float P5V_R_THRESHOLD_DEFAULT = 0;
-const float P10V_R_THRESHOLD_DEFAULT = 0;
-const float PVMAIN_R_THRESHOLD_DEFAULT = 0;
-const float SWD_R_THRESHOLD_DEFAULT = 0;
-const float CAN_R_THRESHOLD_DEFAULT = 0;
+const float P1V2_R_THRESHOLD_DEFAULT 	= 10000;
+const float P1V8_R_THRESHOLD_DEFAULT 	= 10000;
+const float P3V3A_R_THRESHOLD_DEFAULT 	= 10000;
+const float P3V3IO_R_THRESHOLD_DEFAULT 	= 10000;
+const float P5V_R_THRESHOLD_DEFAULT 	= 10000;
+const float P10V_R_THRESHOLD_DEFAULT 	= 10000;
+const float PVMAIN_R_THRESHOLD_DEFAULT 	= 10000;
+const float SWD_R_THRESHOLD_DEFAULT 	= 100000;
+const float CAN_R_THRESHOLD_DEFAULT 	= 100000;
 
 
 /*
 	Default Voltage Expected Values and Tolerances (Volts)
 	Measured Voltage must be within expected +/- tolerance to PASS
 */
-const float P1V2_V_EXPECTED_DEFAULT = 0;
-const float P1V8_V_EXPECTED_DEFAULT = 0;
-const float P3V3A_V_EXPECTED_DEFAULT = 0;
-const float P3V3IO_V_EXPECTED_DEFAULT = 0;
-const float P5V_V_EXPECTED_DEFAULT = 0;
-const float P10V_V_EXPECTED_DEFAULT = 0;
-const float PVMAIN_V_EXPECTED_DEFAULT = 0;
+const float P1V2_V_EXPECTED_DEFAULT 	= 1.2;
+const float P1V8_V_EXPECTED_DEFAULT 	= 1.8;
+const float P3V3A_V_EXPECTED_DEFAULT 	= 3.3;
+const float P3V3IO_V_EXPECTED_DEFAULT 	= 3.3;
+const float P5V_V_EXPECTED_DEFAULT 		= 5;
+const float P10V_V_EXPECTED_DEFAULT 	= 10;
+const float PVMAIN_V_EXPECTED_DEFAULT 	= 36;
 
-const float P1V2_V_TOLERANCE_DEFAULT = 0;
-const float P1V8_V_TOLERANCE_DEFAULT = 0;
-const float P3V3A_V_TOLERANCE_DEFAULT = 0;
-const float P3V3IO_V_TOLERANCE_DEFAULT = 0;
-const float P5V_V_TOLERANCE_DEFAULT = 0;
-const float P10V_V_TOLERANCE_DEFAULT = 0;
-const float PVMAIN_V_TOLERANCE_DEFAULT = 0;
+const float P1V2_V_TOLERANCE_DEFAULT 	= 0.1;
+const float P1V8_V_TOLERANCE_DEFAULT 	= 0.1;
+const float P3V3A_V_TOLERANCE_DEFAULT 	= 0.1;
+const float P3V3IO_V_TOLERANCE_DEFAULT 	= 0.1;
+const float P5V_V_TOLERANCE_DEFAULT 	= 0.1;
+const float P10V_V_TOLERANCE_DEFAULT 	= 0.1;
+const float PVMAIN_V_TOLERANCE_DEFAULT 	= 0.1;
 
 /*
 	Net Name to Default Config Mappings
@@ -89,6 +89,12 @@ config_t* config_init() {
 */
 bool config_evaluate_resistances(adc_measurement_t* measurements) {
 	for (int i = 0; i < NUM_RESISTANCE_CHANNELS; i++) {
+
+		//avoid division by zero
+		if (measurements[i].measurement >= 1.2f) {
+			measurements[i].measurement = 1.2 - 0.0001f;
+		}
+
 		if (strcmp(measurements[i].name, "SWD") == 0 || strcmp(measurements[i].name, "CAN") == 0) {
 			float gain = measurements[i].measurement / 1.2f;
 			measurements[i].measurement = 100000.0f * (gain / (1.0f - gain));

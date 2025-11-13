@@ -1,4 +1,4 @@
-../Core/Src/esc.c:82:6:esc_is_connected	4	static
+../Core/Src/esc.c:82:6:esc_is_connected	8	static
 ../Core/Src/esc.c:92:6:esc_set_pwr	16	static
 ../Core/Src/esc.c:100:6:esc_set_all_nets_mode	24	static
 ../Core/Src/esc.c:113:22:invert	16	static
