@@ -7,10 +7,11 @@
 #include "rpi_spi_link.h"
 #include "lcd.h"
 #include "config.h"
+#include "tinymovr.h"
 
 #include "stm32l4xx_hal.h"
 
-#define WAIT_FOR_START_BUTTON
+//#define TESTING
 
 static ADC_HandleTypeDef* h_adc;
 static CAN_HandleTypeDef* h_can;
@@ -22,23 +23,38 @@ static config_t* h_config;
 static bool pending_spi_packet = false;
 
 void app_main();
+
 bool establish_rpi_connection();
 void wait_for_esc_insert();
 void resistance_tests();
 void voltage_tests();
+void flash_esc();
+void spin_motor();
+
 void lcd_print_failed_nets(adc_measurement_t* measurements, int num_measurements);
 void debug_lcd_print_measurements(adc_measurement_t* measurements);
 
+/*
+	Test main replaaces app_main for debugging purposes
+ */
 void test_main() {
+	uint8_t id = 0;
+	esc_set_all_nets_mode(ORIGINAL);
 	while(1) {
-		resistance_tests();
-		Press_Type_t press_type = PRESS_TYPE_NONE;
-		press_type = wait_on_button(500);
-		if (press_type != PRESS_TYPE_NONE) {
-			HAL_GPIO_TogglePin(EN_1V2_GPIO_Port, EN_1V2_Pin);
+		set_can_id(id);
+		lcd_printf(LCD_LINE_1, "Trying ID:: 0x%02X", id);
+		uint8_t can_id = tm_get_can_id();
+		if (can_id != 0xFF) {
+			lcd_printf(LCD_LINE_2, "CAN ID: 0x%02X", can_id);
 		}
+		id++;
+		HAL_Delay(1000);
 	}
 }
+
+/*
+	Initialize application
+ */
 void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef* spi, I2C_HandleTypeDef* i2c) {
 	h_adc = adc;
 	h_can = can;
@@ -49,15 +65,24 @@ void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef*
 	link_init(spi, &pending_spi_packet, h_config);
 	adc_init(adc);
 	lcd_init(i2c);
+	tm_init(can);
+
 	esc_set_pwr(FLOATING);
 	adc_set_1v2_source(FLOATING);
 
-	//test_main();
-
+#ifdef TESTING
+	test_main();
+#else
 	app_main();
+#endif
 
 }
 
+
+/*
+ * TODO: allow RPI to be powered off whether esc is inserted or not
+ *
+ */
 void app_main(void) {
 	establish_rpi_connection();
 	
@@ -83,7 +108,9 @@ void app_main(void) {
 			lcd_printf(LCD_LINE_1, "Running Tests");
 			resistance_tests();
 		} else if (press_type == PRESS_TYPE_LONG) {
+			lcd_printf(LCD_LINE_1, "RPI Powered Off");
 			rpi_press_power_button();
+			HAL_Delay(1500);
 		}
 
 		lcd_clear_screen();
@@ -105,6 +132,8 @@ bool establish_rpi_connection() {
 		if (rpi_is_awake()) {
 			lcd_clear_screen();
 			lcd_printf(LCD_LINE_1, "RPI Connected");
+			HAL_Delay(1500);
+			lcd_clear_screen();
 			return true;
 		}
 	}
@@ -126,6 +155,12 @@ void wait_for_esc_insert() {
 		lcd_printf(LCD_LINE_1, "Insert ESC");
 
 		while (!esc_is_connected()) {
+			if (pending_spi_packet) {
+				// process any incoming SPI packets while waiting
+				uint8_t ret_buf[PAYLOAD_SIZE] = {0};
+				link_process_packet(ret_buf);
+				lcd_printf(LCD_LINE_1, "Insert ESC");
+			}
 			HAL_Delay(1);
 		}
 	}
@@ -148,19 +183,22 @@ void resistance_tests() {
 
 	adc_measurement_t measurements[NUM_RESISTANCE_CHANNELS] = {0};
 	adc_take_measurements(measurements, RESISTANCE);
-
 	bool any_failures = config_evaluate_resistances(measurements);
-	rpi_send_debug_info((uint8_t*)measurements, sizeof(measurements));
+	adc_measurement_wire_t wire_measurements[NUM_RESISTANCE_CHANNELS] = {0};
+	adc_measurements_to_wire(measurements, wire_measurements, NUM_RESISTANCE_CHANNELS);
+	rpi_send_debug_info((uint8_t*)wire_measurements, sizeof(wire_measurements));
 	if (any_failures) {
 		lcd_clear_screen();
 		lcd_printf(LCD_LINE_1, "Short Detected");
-		lcd_print_failed_nets(measurements, NUM_RESISTANCE_CHANNELS);
 		while (esc_is_connected()) {
 			lcd_print_failed_nets(measurements, NUM_RESISTANCE_CHANNELS);
 			HAL_Delay(1);
 		}
 		return;
 	} else {
+		lcd_clear_screen();
+		lcd_printf(LCD_LINE_1, "Resistance Pass");
+		HAL_Delay(1000);
 		voltage_tests();
 	}
 }
@@ -183,22 +221,105 @@ void voltage_tests() {
 	adc_measurement_t measurements[NUM_VOLTAGE_CHANNELS] = {0};
 	adc_take_measurements(measurements, VOLTAGE);
 	bool any_failures = config_evaluate_voltages(measurements);
-	rpi_send_debug_info((uint8_t*)measurements, sizeof(measurements));
+	adc_measurement_wire_t wire_measurements[NUM_VOLTAGE_CHANNELS] = {0};
+	adc_measurements_to_wire(measurements, wire_measurements, NUM_VOLTAGE_CHANNELS);
+	rpi_send_debug_info((uint8_t*)wire_measurements, sizeof(wire_measurements));
 	if (any_failures) {
 		lcd_clear_screen();
 		lcd_printf(LCD_LINE_1, "Voltage Fault");
-		lcd_print_failed_nets(measurements, NUM_VOLTAGE_CHANNELS);
+		while (esc_is_connected()) {
+			lcd_print_failed_nets(measurements, NUM_VOLTAGE_CHANNELS);
+			HAL_Delay(1);
+		}
+		return;
 	} else {
 		lcd_clear_screen();
-		lcd_printf(LCD_LINE_1, "All Tests Pass");
-		lcd_printf(LCD_LINE_2, "Remove ESC");
+		lcd_printf(LCD_LINE_1, "Voltage Pass");
+		HAL_Delay(1000);
+		flash_esc();
 	}
+
+	return;
+
+}
+
+/*
+	Flash ESC firmware via RPi
+	1. Set ESC to original mode
+	2. Send flash request to RPi
+	3. Wait for RPi response
+	4. If success, display success message and spin motor
+	5. If failure, display failure message and wait for ESC removal
+ */
+void flash_esc() {
+	adc_set_1v2_source(FLOATING);
+	esc_set_all_nets_mode(ORIGINAL);
+	// esc_set_pwr(CONNECTED);
+	esc_set_pwr(FLOATING); //TODO
+
+	rpi_send_firmware_flash_request();
+
+	while (1) {
+		// wait for RPI to respond
+		while (!pending_spi_packet) {
+			HAL_Delay(1);
+		}
+		// rpi has responded, process packet
+		uint8_t ret_buf[PAYLOAD_SIZE] = {0};
+		uint32_t ret_len = link_process_packet(ret_buf);
+		if (strncmp((char*)ret_buf, "success", ret_len) == 0) {
+			// flash successful
+			lcd_clear_screen();
+			lcd_printf(LCD_LINE_1, "Flash Success");
+			HAL_Delay(1000);
+			spin_motor();
+			break;
+		} else if (strncmp((char*)ret_buf, "failure", ret_len) == 0) {
+			// flash failed
+			lcd_clear_screen();
+			lcd_printf(LCD_LINE_1, "Flash Failed");
+			while (esc_is_connected()) {
+				HAL_Delay(1);
+			}
+			return;
+		} else {
+			// unknown response, ignore and continue waiting
+			continue;
+		}
+	}
+
+}
+
+void spin_motor() {
+	esc_set_all_nets_mode(ORIGINAL);
+	// esc_set_pwr(CONNECTED); 
+	esc_set_pwr(FLOATING); //TODO
+	
+	uint8_t id = 0;
+	while(id < 10) {
+		set_can_id(id);
+		lcd_printf(LCD_LINE_1, "Trying ID:: 0x%02X", id);
+		uint8_t can_id = tm_get_can_id();
+		if (can_id != 0xFF) {
+			lcd_printf(LCD_LINE_2, "CAN ID: 0x%02X", can_id);
+			lcd_printf(LCD_LINE_1, "CAN COMM SUCCESS");
+			HAL_Delay(1000);
+			lcd_clear_screen();
+			lcd_printf(LCD_LINE_1, "All Tests Pass");
+			lcd_printf(LCD_LINE_2, "Remove ESC");
+			while (esc_is_connected()) {
+				HAL_Delay(1);
+			}
+			return;
+		}
+		id++;
+		HAL_Delay(1000);
+	}
+	lcd_printf(LCD_LINE_1, "CAN Failed");
 	while (esc_is_connected()) {
-		lcd_print_failed_nets(measurements, NUM_RESISTANCE_CHANNELS);
 		HAL_Delay(1);
 	}
 	return;
-
 }
 
 /*
@@ -219,6 +340,6 @@ void lcd_print_failed_nets(adc_measurement_t* measurements, int num_measurements
 }
 
 void debug_lcd_print_measurements(adc_measurement_t* measurements) {
-	lcd_printf(LCD_LINE_1, "%s:%.7f", measurements[2].name, measurements[2].measurement);
-	lcd_printf(LCD_LINE_2, "%s:%.7f", measurements[6].name, measurements[6].measurement);
+	lcd_printf(LCD_LINE_1, "%s:%.3fK", measurements[2].name, measurements[2].measurement/1000);
+	lcd_printf(LCD_LINE_2, "%s:%.3fK", measurements[6].name, measurements[6].measurement/1000);
 }

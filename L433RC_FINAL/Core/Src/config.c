@@ -3,67 +3,31 @@
 
 static config_t config;
 
-
-/*
-	Default Resistance Thresholds (Ohms)
-	Measured Resistance must be > threshold to PASS
-*/
-const float P1V2_R_THRESHOLD_DEFAULT 	= 10000;
-const float P1V8_R_THRESHOLD_DEFAULT 	= 10000;
-const float P3V3A_R_THRESHOLD_DEFAULT 	= 10000;
-const float P3V3IO_R_THRESHOLD_DEFAULT 	= 10000;
-const float P5V_R_THRESHOLD_DEFAULT 	= 10000;
-const float P10V_R_THRESHOLD_DEFAULT 	= 10000;
-const float PVMAIN_R_THRESHOLD_DEFAULT 	= 10000;
-const float SWD_R_THRESHOLD_DEFAULT 	= 100000;
-const float CAN_R_THRESHOLD_DEFAULT 	= 100000;
+#define SOURCE_V 1.215f
 
 
-/*
-	Default Voltage Expected Values and Tolerances (Volts)
-	Measured Voltage must be within expected +/- tolerance to PASS
-*/
-const float P1V2_V_EXPECTED_DEFAULT 	= 1.2;
-const float P1V8_V_EXPECTED_DEFAULT 	= 1.8;
-const float P3V3A_V_EXPECTED_DEFAULT 	= 3.3;
-const float P3V3IO_V_EXPECTED_DEFAULT 	= 3.3;
-const float P5V_V_EXPECTED_DEFAULT 		= 5;
-const float P10V_V_EXPECTED_DEFAULT 	= 10;
-const float PVMAIN_V_EXPECTED_DEFAULT 	= 36;
-
-const float P1V2_V_TOLERANCE_DEFAULT 	= 0.1;
-const float P1V8_V_TOLERANCE_DEFAULT 	= 0.1;
-const float P3V3A_V_TOLERANCE_DEFAULT 	= 0.1;
-const float P3V3IO_V_TOLERANCE_DEFAULT 	= 0.1;
-const float P5V_V_TOLERANCE_DEFAULT 	= 0.1;
-const float P10V_V_TOLERANCE_DEFAULT 	= 0.1;
-const float PVMAIN_V_TOLERANCE_DEFAULT 	= 0.1;
-
-/*
-	Net Name to Default Config Mappings
-*/
-config_resistance_thresholds_t res_thresholds[] = {
-    {.name = "P1V2", .threshold = P1V2_R_THRESHOLD_DEFAULT},
-    {.name = "P1V8", .threshold = P1V8_R_THRESHOLD_DEFAULT},
-    {.name = "P3V3_A", .threshold = P3V3A_R_THRESHOLD_DEFAULT},
-    {.name = "P3V3_IO", .threshold = P3V3IO_R_THRESHOLD_DEFAULT},
-    {.name = "P5V", .threshold = P5V_R_THRESHOLD_DEFAULT},
-    {.name = "P10V", .threshold = P10V_R_THRESHOLD_DEFAULT},
-    {.name = "PVMAIN", .threshold = PVMAIN_R_THRESHOLD_DEFAULT},
-    {.name = "SWD", .threshold = SWD_R_THRESHOLD_DEFAULT},
-    {.name = "CAN", .threshold = CAN_R_THRESHOLD_DEFAULT}
+static const config_t default_config = { // NAME, THRESHOLD
+    .resistance_thresholds = {
+        { "P1V2",    10000.0f },
+        { "P1V8",    10000.0f },
+        { "P3V3_A",  10000.0f },
+        { "P3V3_IO", 10000.0f },
+        { "P5V",     10000.0f },
+        { "P10V",    10000.0f },
+        { "PVMAIN",  10000.0f },
+        { "SWD",     100000.0f },
+        { "CAN",     100000.0f },
+    },
+    .voltage_tolerances = { // NAME, EXPECTED, TOLERANCE
+        { "P1V2",   1.2f,  0.1f },
+        { "P1V8",   1.8f,  0.1f },
+        { "P3V3_A", 3.3f,  0.1f },
+        { "P3V3_IO",3.3f,  0.1f },
+        { "P5V",    5.0f,  0.1f },
+        { "P10V",   10.0f, 0.1f },
+        { "PVMAIN", 36.0f, 0.1f },
+    }
 };
-
-config_voltage_tolerances_t voltage_tolerances[] = {
-    {.name = "P1V2", .expected = P1V2_V_EXPECTED_DEFAULT, .tolerance = P1V2_V_TOLERANCE_DEFAULT},
-    {.name = "P1V8", .expected = P1V8_V_EXPECTED_DEFAULT, .tolerance = P1V8_V_TOLERANCE_DEFAULT},
-    {.name = "P3V3_A", .expected = P3V3A_V_EXPECTED_DEFAULT, .tolerance = P3V3A_V_TOLERANCE_DEFAULT},
-    {.name = "P3V3_IO", .expected = P3V3IO_V_EXPECTED_DEFAULT, .tolerance = P3V3IO_V_TOLERANCE_DEFAULT},
-    {.name = "P5V", .expected = P5V_V_EXPECTED_DEFAULT, .tolerance = P5V_V_TOLERANCE_DEFAULT},
-    {.name = "P10V", .expected = P10V_V_EXPECTED_DEFAULT, .tolerance = P10V_V_TOLERANCE_DEFAULT},
-    {.name = "PVMAIN", .expected = PVMAIN_V_EXPECTED_DEFAULT, .tolerance = PVMAIN_V_TOLERANCE_DEFAULT}
-};
-
 
 static adc_result_t config_evaluate_resistance_threshold(float measurement, float threshold);
 static adc_result_t config_evaluate_voltage_tolerance(float measurement, float expected, float tolerance);
@@ -75,9 +39,12 @@ static adc_result_t config_evaluate_voltage_tolerance(float measurement, float e
 	@return Pointer to initialized config_t struct
 */
 config_t* config_init() {
-	memcpy(config.resistance_thresholds, res_thresholds, sizeof(res_thresholds));
-	memcpy(config.voltage_tolerances, voltage_tolerances, sizeof(voltage_tolerances));
+	memcpy(&config, &default_config, sizeof(config_t));
 	return &config;
+}
+
+void config_apply(config_t* new_config) {
+	memcpy(&config, new_config, sizeof(config_t));
 }
 
 
@@ -91,15 +58,13 @@ bool config_evaluate_resistances(adc_measurement_t* measurements) {
 	for (int i = 0; i < NUM_RESISTANCE_CHANNELS; i++) {
 
 		//avoid division by zero
-		if (measurements[i].measurement >= 1.2f) {
-			measurements[i].measurement = 1.2 - 0.0001f;
+		if (measurements[i].measurement >= SOURCE_V) {
+			measurements[i].measurement = SOURCE_V - 0.0001f;
 		}
-
+		float gain = measurements[i].measurement / SOURCE_V;
 		if (strcmp(measurements[i].name, "SWD") == 0 || strcmp(measurements[i].name, "CAN") == 0) {
-			float gain = measurements[i].measurement / 1.2f;
 			measurements[i].measurement = 100000.0f * (gain / (1.0f - gain));
 		} else {
-			float gain = measurements[i].measurement / 1.2f;
 			measurements[i].measurement = 10000.0f * (gain / (1.0f - gain));
 		}
 	}

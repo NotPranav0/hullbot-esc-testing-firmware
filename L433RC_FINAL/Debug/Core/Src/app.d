@@ -33,7 +33,7 @@ Core/Src/app.o: ../Core/Src/app.c ../Core/Inc/app.h ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h \
  ../Core/Inc/adc.h ../Core/Inc/esc.h ../Core/Inc/button.h \
  ../Core/Inc/esc.h ../Core/Inc/rpi_spi_link.h ../Core/Inc/config.h \
- ../Core/Inc/adc.h ../Core/Inc/lcd.h
+ ../Core/Inc/adc.h ../Core/Inc/lcd.h ../Core/Inc/tinymovr.h
 ../Core/Inc/app.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
@@ -76,3 +76,4 @@ Core/Src/app.o: ../Core/Src/app.c ../Core/Inc/app.h ../Core/Inc/main.h \
 ../Core/Inc/config.h:
 ../Core/Inc/adc.h:
 ../Core/Inc/lcd.h:
+../Core/Inc/tinymovr.h:

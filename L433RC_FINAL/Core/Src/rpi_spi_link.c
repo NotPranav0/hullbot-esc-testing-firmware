@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "rpi_spi_link.h"
+#include "lcd.h"
 #include "main.h"
 
 /*
@@ -13,7 +14,8 @@
 */
 typedef enum {
 	SET_CONFIG = 0x01,
-	SEND_TEXT = 0x02
+	SEND_TEXT = 0x02,
+    FLASH_FIRMWARE_STATUS = 0x03
 } rx_commands_t;
 
 /*
@@ -24,7 +26,8 @@ typedef enum {
 typedef enum {
 	PING = 0x80,
 	LOG_MESSAGE = 0x81,
-	DEBUG_INFO = 0x82
+	DEBUG_INFO = 0x82,
+    FLASH_FIRMWARE_REQUEST = 0x83
 } tx_commands_t;
 
 static uint8_t spi_tx_buf[BUFFER_SIZE];
@@ -56,6 +59,8 @@ void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved, config_t* config) 
     h_spi = spi;
     h_packet_recieved = packet_recieved;
 
+    HAL_GPIO_WritePin(SHUTDOWN_GPIO_Port, SHUTDOWN_Pin, GPIO_PIN_SET);
+
     memset(spi_tx_buf, 0, BUFFER_SIZE);
     memset(spi_rx_buf, 0, BUFFER_SIZE);
     memset(rx_copy_buffer, 0, BUFFER_SIZE);
@@ -76,15 +81,23 @@ uint32_t link_process_packet(uint8_t* ret_buf) {
     switch (command) {
         case SET_CONFIG:
         	process_config((config_t*)payload);
+        	*h_packet_recieved = false;
             return 0;
             break;
         case SEND_TEXT:
             process_text((char*)payload, payload_len, ret_buf);
+            *h_packet_recieved = false;
             return payload_len;
             break;
+        case FLASH_FIRMWARE_STATUS:
+            process_text((char*)payload, payload_len, ret_buf);
+            *h_packet_recieved = false;
+            return payload_len;
         default:
+        	*h_packet_recieved = false;
             break;
     }
+
     return 0;
 }
 
@@ -111,11 +124,22 @@ void rpi_send_debug_info(const uint8_t* data, uint16_t length) {
 }
 
 /*
+    Sends firmware flash request to RPi
+*/
+void rpi_send_firmware_flash_request() {
+    // arbritrary data
+    const char* data = "flash_firmware";
+    const uint16_t length = strlen(data);
+
+    send_packet_to_pi(FLASH_FIRMWARE_REQUEST, (const uint8_t*)data, length);
+}
+
+/*
     Simulates pressing the RPi power button to turn it on or off
 */
 void rpi_press_power_button(void) {
     HAL_GPIO_WritePin(SHUTDOWN_GPIO_Port, SHUTDOWN_Pin, GPIO_PIN_RESET);
-    HAL_Delay(300);
+    HAL_Delay(1000);
     HAL_GPIO_WritePin(SHUTDOWN_GPIO_Port, SHUTDOWN_Pin, GPIO_PIN_SET);
 }
 
@@ -180,8 +204,7 @@ void process_text(char* text, uint16_t len, uint8_t* ret_buf) {
     @param received_config: Pointer to received config_t struct
 */
 void process_config(config_t* received_config) {
-	//TODO dangerous without validation probably
-	h_config = received_config;
+	config_apply(received_config);
 }
 
 /*

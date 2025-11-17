@@ -244,11 +244,11 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 16;
+  hcan1.Init.Prescaler = 1;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
-  hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_15TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_4TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
@@ -408,9 +408,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(SPI_INT_GPIO_Port, SPI_INT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : ESC_P3V3_IO_SEL_Pin ESC_P5V_SEL_Pin ESC_P3V3_A_SEL_Pin USER_BTN_Pin
-                           USER_LED_Pin SHUTDOWN_Pin */
+                           USER_LED_Pin */
   GPIO_InitStruct.Pin = ESC_P3V3_IO_SEL_Pin|ESC_P5V_SEL_Pin|ESC_P3V3_A_SEL_Pin|USER_BTN_Pin
-                          |USER_LED_Pin|SHUTDOWN_Pin;
+                          |USER_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -444,6 +444,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(START_BUTTON_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SHUTDOWN_Pin */
+  GPIO_InitStruct.Pin = SHUTDOWN_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(SHUTDOWN_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : SPI_INT_Pin */
   GPIO_InitStruct.Pin = SPI_INT_Pin;
@@ -485,9 +492,10 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
   while (1)
   {
+	  HAL_GPIO_TogglePin(USER_LED_GPIO_Port, USER_LED_Pin);
+	  HAL_Delay(500);
   }
   /* USER CODE END Error_Handler_Debug */
 }

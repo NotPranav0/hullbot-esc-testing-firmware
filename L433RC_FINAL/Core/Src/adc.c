@@ -1,6 +1,7 @@
 #include "adc.h"
 #include "stm32l4xx_hal.h"
 #include "main.h"
+#include <string.h>
 
 static ADC_HandleTypeDef* h_adc;
 
@@ -15,7 +16,7 @@ static uint32_t adc_read_channel_blocking(uint32_t channel);
 
 typedef struct {
 	uint32_t channel;
-	char* name;
+	char name[NAME_SIZE];
 } adc_channel_t;
 
 /*
@@ -85,12 +86,22 @@ void adc_take_measurements(adc_measurement_t* measurements, measurement_type_t t
 		for (int net = 0; net < num_channels; net++) {
 			uint32_t raw_val = adc_read_channel_blocking(channels[net].channel);
 			measurements[net].measurement += (raw_to_volts(raw_val) / (float)NUM_SAMPLES);
-			measurements[net].name = channels[net].name;
+			strncpy(measurements[net].name, channels[net].name, NAME_SIZE);
 			measurements[net].type = type;
 		}
 	}
 
 
+}
+
+void adc_measurements_to_wire(const adc_measurement_t* measurements, adc_measurement_wire_t* wire_measurements, int num_measurements) {
+	for (int i = 0; i < num_measurements; i++) {
+		strncpy(wire_measurements[i].name, measurements[i].name, NAME_SIZE);
+		wire_measurements[i].name[NAME_SIZE - 1] = '\0'; 
+		wire_measurements[i].measurement = measurements[i].measurement;
+		wire_measurements[i].type = (uint8_t)measurements[i].type;
+		wire_measurements[i].result = (uint8_t)measurements[i].result;
+	}
 }
 
 // Private 

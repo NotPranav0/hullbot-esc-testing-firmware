@@ -1,137 +1,18 @@
-10:56:33 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/app.d" -MT"Core/Src/app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/app.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  42052	    832	   5648	  48532	   bd94	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-10:57:17 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
+16:51:43 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
 make -j12 all 
 arm-none-eabi-size  L433RC_FINAL.elf 
    text	   data	    bss	    dec	    hex	filename
-  42052	    832	   5648	  48532	   bd94	L433RC_FINAL.elf
+  48164	    808	   5864	  54836	   d634	L433RC_FINAL.elf
 Finished building: default.size.stdout
  
-11:00:56 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/app.d" -MT"Core/Src/app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/app.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  42044	    832	   5648	  48524	   bd8c	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-11:01:42 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
+16:51:47 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
 make -j12 all 
 arm-none-eabi-size  L433RC_FINAL.elf 
    text	   data	    bss	    dec	    hex	filename
-  42044	    832	   5648	  48524	   bd8c	L433RC_FINAL.elf
+  48164	    808	   5864	  54836	   d634	L433RC_FINAL.elf
 Finished building: default.size.stdout
  
-11:11:01 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/adc.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/adc.d" -MT"Core/Src/adc.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/adc.o"
-arm-none-eabi-gcc "../Core/Src/app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/app.d" -MT"Core/Src/app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/app.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  42036	    832	   5648	  48516	   bd84	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-11:11:49 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-size  L433RC_FINAL.elf 
-   text	   data	    bss	    dec	    hex	filename
-  42036	    832	   5648	  48516	   bd84	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-12:05:37 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/config.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/config.d" -MT"Core/Src/config.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/config.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  42036	    832	   5648	  48516	   bd84	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-12:14:27 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/app.d" -MT"Core/Src/app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/app.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  42028	    832	   5648	  48508	   bd7c	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-12:14:59 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-size  L433RC_FINAL.elf 
-   text	   data	    bss	    dec	    hex	filename
-  42028	    832	   5648	  48508	   bd7c	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-14:27:25 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/adc.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/adc.d" -MT"Core/Src/adc.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/adc.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  42028	    832	   5648	  48508	   bd7c	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-14:48:44 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/adc.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/adc.d" -MT"Core/Src/adc.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/adc.o"
-arm-none-eabi-gcc "../Core/Src/app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/app.d" -MT"Core/Src/app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/app.o"
-arm-none-eabi-gcc "../Core/Src/button.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/button.d" -MT"Core/Src/button.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/button.o"
-arm-none-eabi-gcc "../Core/Src/config.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/config.d" -MT"Core/Src/config.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/config.o"
-arm-none-eabi-gcc "../Core/Src/esc.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/esc.d" -MT"Core/Src/esc.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/esc.o"
-arm-none-eabi-gcc "../Core/Src/lcd.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/lcd.d" -MT"Core/Src/lcd.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/lcd.o"
-arm-none-eabi-gcc "../Core/Src/rpi_spi_link.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/rpi_spi_link.d" -MT"Core/Src/rpi_spi_link.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rpi_spi_link.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  42028	    832	   5648	  48508	   bd7c	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-15:17:39 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
+16:59:49 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
 make -j12 all 
 arm-none-eabi-gcc "../Core/Src/rpi_spi_link.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/rpi_spi_link.d" -MT"Core/Src/rpi_spi_link.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rpi_spi_link.o"
 arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
@@ -140,86 +21,8 @@ Finished building target: L433RC_FINAL.elf
 arm-none-eabi-size  L433RC_FINAL.elf 
 arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
    text	   data	    bss	    dec	    hex	filename
-  42028	    832	   5648	  48508	   bd7c	L433RC_FINAL.elf
+  48132	    808	   5864	  54804	   d614	L433RC_FINAL.elf
 Finished building: default.size.stdout
  
 Finished building: L433RC_FINAL.list
- 
-15:21:23 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/app.d" -MT"Core/Src/app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/app.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  42028	    832	   5648	  48508	   bd7c	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-16:10:56 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/app.d" -MT"Core/Src/app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/app.o"
-arm-none-eabi-gcc "../Core/Src/esc.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/esc.d" -MT"Core/Src/esc.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/esc.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  43116	    832	   5648	  49596	   c1bc	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-16:11:21 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-size  L433RC_FINAL.elf 
-   text	   data	    bss	    dec	    hex	filename
-  43116	    832	   5648	  49596	   c1bc	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-16:23:53 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/config.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/config.d" -MT"Core/Src/config.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/config.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  43116	    832	   5648	  49596	   c1bc	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-16:24:46 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-size  L433RC_FINAL.elf 
-   text	   data	    bss	    dec	    hex	filename
-  43116	    832	   5648	  49596	   c1bc	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-16:39:36 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/config.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/config.d" -MT"Core/Src/config.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/config.o"
-arm-none-eabi-gcc -o "L433RC_FINAL.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\pranav.budhwar\STM32CubeIDE\workspace_1.18.1\L433RC_FINAL\STM32L433RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L433RC_FINAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: L433RC_FINAL.elf
- 
-arm-none-eabi-size  L433RC_FINAL.elf 
-arm-none-eabi-objdump -h -S L433RC_FINAL.elf  > "L433RC_FINAL.list"
-   text	   data	    bss	    dec	    hex	filename
-  43172	    832	   5648	  49652	   c1f4	L433RC_FINAL.elf
-Finished building: default.size.stdout
- 
-Finished building: L433RC_FINAL.list
- 
-16:40:53 **** Incremental Build of configuration Debug for project L433RC_FINAL ****
-make -j12 all 
-arm-none-eabi-size  L433RC_FINAL.elf 
-   text	   data	    bss	    dec	    hex	filename
-  43172	    832	   5648	  49652	   c1f4	L433RC_FINAL.elf
-Finished building: default.size.stdout
  

@@ -66,6 +66,11 @@
   },
   {
     "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC_FINAL",
+    "command": "arm-none-eabi-gcc \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC_FINAL/Core/Src/tinymovr.c\" -mcpu\u003dcortex-m4 -std\u003dgnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L433xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC_FINAL/Debug/Core/Src/tinymovr.o\"",
+    "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC_FINAL/Core/Src/tinymovr.c"
+  },
+  {
+    "directory": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC_FINAL",
     "command": "arm-none-eabi-gcc -mcpu\u003dcortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp --specs\u003dnano.specs -mfpu\u003dfpv4-sp-d16 -mfloat-abi\u003dhard -mthumb -o \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC_FINAL/Debug/Core/Startup/startup_stm32l433rctx.o\" \"C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC_FINAL/Core/Startup/startup_stm32l433rctx.s\"",
     "file": "C:/Users/pranav.budhwar/STM32CubeIDE/workspace_1.18.1/L433RC_FINAL/Core/Startup/startup_stm32l433rctx.s"
   },
