@@ -11,7 +11,7 @@
 
 #include "stm32l4xx_hal.h"
 
-//#define TESTING
+#define TESTING
 
 static ADC_HandleTypeDef* h_adc;
 static CAN_HandleTypeDef* h_can;
@@ -35,19 +35,23 @@ void lcd_print_failed_nets(adc_measurement_t* measurements, int num_measurements
 void debug_lcd_print_measurements(adc_measurement_t* measurements);
 
 /*
-	Test main replaaces app_main for debugging purposes
+	Test main replaces app_main for debugging purposes
  */
 void test_main() {
-	uint8_t id = 0;
-	esc_set_all_nets_mode(ORIGINAL);
-	while(1) {
-		set_can_id(id);
-		lcd_printf(LCD_LINE_1, "Trying ID:: 0x%02X", id);
-		uint8_t can_id = tm_get_can_id();
-		if (can_id != 0xFF) {
-			lcd_printf(LCD_LINE_2, "CAN ID: 0x%02X", can_id);
+	esc_set_pwr(FLOATING);
+	esc_set_all_nets_mode(MEASUREMENT);
+	adc_set_1v2_source(CONNECTED);
+
+	while (1) {
+		adc_measurement_t measurements[NUM_RESISTANCE_CHANNELS] = {0};
+		adc_take_measurements(measurements, RESISTANCE);
+		//config_evaluate_resistances(measurements);
+		adc_measurement_wire_t wire_measurements[NUM_RESISTANCE_CHANNELS] = {0};
+		adc_measurements_to_wire(measurements, wire_measurements, NUM_RESISTANCE_CHANNELS);
+		for (int i = 0; i < NUM_RESISTANCE_CHANNELS; i++) {
+			wire_measurements[i].esc_connected = esc_is_connected();
 		}
-		id++;
+		rpi_send_debug_info((uint8_t*)wire_measurements, sizeof(wire_measurements));
 		HAL_Delay(1000);
 	}
 }
@@ -209,7 +213,7 @@ void resistance_tests() {
 	2. Take voltage measurements
 	3. Evaluate results
 	4. If any failures, display on LCD and wait for ESC removal
-	5. If all pass, display success message and wait for ESC removal
+	5. If all pass, process to flashing
  */
 void voltage_tests() {
 	adc_set_1v2_source(FLOATING);

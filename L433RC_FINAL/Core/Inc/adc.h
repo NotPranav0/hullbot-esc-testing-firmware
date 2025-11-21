@@ -25,13 +25,14 @@ typedef struct {
     adc_result_t result;
 } adc_measurement_t;
 
-// ---- Wire representation for SPI (fixed-size, no padding surprises) ----
+// ---- Wire representation for SPI (fixed-size) ----
 #pragma pack(push, 1)
 typedef struct {
     char    name[NAME_SIZE];   
     float   measurement;       
     uint8_t type;              // RESISTANCE / VOLTAGE
     uint8_t result;            // PASS / FAIL
+    bool esc_connected;
 } adc_measurement_wire_t;
 #pragma pack(pop)
 

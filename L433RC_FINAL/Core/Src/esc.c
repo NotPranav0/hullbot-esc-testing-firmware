@@ -81,7 +81,6 @@ GPIO_PinState esc_nets_original_modes[] = {
 */
 bool esc_is_connected() {
 	return (HAL_GPIO_ReadPin(ESC_DET_GPIO_Port, ESC_DET_Pin) == GPIO_PIN_RESET);
-	//return true; //TODO
 }
 
 /*

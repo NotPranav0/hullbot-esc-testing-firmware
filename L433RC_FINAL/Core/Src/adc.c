@@ -9,7 +9,7 @@ static ADC_HandleTypeDef* h_adc;
 #define MAX_VOLTS 		3.3
 #define MAX_ADC_RAW_VAL ((1 << ADC_BITS) - 1)
 
-#define NUM_SAMPLES 	10 // Number of samples to average per measurement
+#define NUM_SAMPLES 	1 // Number of samples to average per measurement
 
 static float raw_to_volts(uint32_t raw);
 static uint32_t adc_read_channel_blocking(uint32_t channel);
@@ -31,8 +31,8 @@ adc_channel_t adc_channels_resistance[] = {
 	{.channel = ADC_CHANNEL_6, .name = "P5V"},
 	{.channel = ADC_CHANNEL_2, .name = "P10V"},
 	{.channel = ADC_CHANNEL_3, .name = "PVMAIN"},
-	{.channel = ADC_CHANNEL_15, .name = "SWD"},
-	{.channel = ADC_CHANNEL_16, .name = "CAN"}
+	{.channel = ADC_CHANNEL_16, .name = "SWD"},
+	{.channel = ADC_CHANNEL_15, .name = "CAN"}
 };
 
 adc_channel_t adc_channels_voltage[] = {
