@@ -11,7 +11,7 @@
 
 #include "stm32l4xx_hal.h"
 
-#define TESTING
+//#define TESTING
 
 static ADC_HandleTypeDef* h_adc;
 static CAN_HandleTypeDef* h_can;
@@ -46,12 +46,10 @@ void test_main() {
 		adc_measurement_t measurements[NUM_RESISTANCE_CHANNELS] = {0};
 		adc_take_measurements(measurements, RESISTANCE);
 		//config_evaluate_resistances(measurements);
-		adc_measurement_wire_t wire_measurements[NUM_RESISTANCE_CHANNELS] = {0};
-		adc_measurements_to_wire(measurements, wire_measurements, NUM_RESISTANCE_CHANNELS);
 		for (int i = 0; i < NUM_RESISTANCE_CHANNELS; i++) {
-			wire_measurements[i].esc_connected = esc_is_connected();
+			measurements[i].esc_connected = esc_is_connected();
 		}
-		rpi_send_debug_info((uint8_t*)wire_measurements, sizeof(wire_measurements));
+		rpi_send_debug_info((uint8_t*)measurements, sizeof(measurements));
 		HAL_Delay(1000);
 	}
 }
@@ -83,10 +81,6 @@ void app_init(ADC_HandleTypeDef* adc, CAN_HandleTypeDef* can, SPI_HandleTypeDef*
 }
 
 
-/*
- * TODO: allow RPI to be powered off whether esc is inserted or not
- *
- */
 void app_main(void) {
 	establish_rpi_connection();
 	
@@ -159,13 +153,22 @@ void wait_for_esc_insert() {
 		lcd_printf(LCD_LINE_1, "Insert ESC");
 
 		while (!esc_is_connected()) {
+			Press_Type_t press_type = wait_on_button(10);
+			if (press_type == PRESS_TYPE_LONG) {
+				lcd_clear_screen();
+				lcd_printf(LCD_LINE_1, "RPI Powered Off");
+				rpi_press_power_button();
+				HAL_Delay(1500);
+				lcd_clear_screen();
+				lcd_printf(LCD_LINE_1, "Insert ESC");
+			}
+
 			if (pending_spi_packet) {
 				// process any incoming SPI packets while waiting
 				uint8_t ret_buf[PAYLOAD_SIZE] = {0};
 				link_process_packet(ret_buf);
 				lcd_printf(LCD_LINE_1, "Insert ESC");
 			}
-			HAL_Delay(1);
 		}
 	}
 	lcd_clear_screen();
@@ -188,9 +191,7 @@ void resistance_tests() {
 	adc_measurement_t measurements[NUM_RESISTANCE_CHANNELS] = {0};
 	adc_take_measurements(measurements, RESISTANCE);
 	bool any_failures = config_evaluate_resistances(measurements);
-	adc_measurement_wire_t wire_measurements[NUM_RESISTANCE_CHANNELS] = {0};
-	adc_measurements_to_wire(measurements, wire_measurements, NUM_RESISTANCE_CHANNELS);
-	rpi_send_debug_info((uint8_t*)wire_measurements, sizeof(wire_measurements));
+	rpi_send_debug_info((uint8_t*)measurements, sizeof(measurements));
 	if (any_failures) {
 		lcd_clear_screen();
 		lcd_printf(LCD_LINE_1, "Short Detected");
@@ -225,9 +226,7 @@ void voltage_tests() {
 	adc_measurement_t measurements[NUM_VOLTAGE_CHANNELS] = {0};
 	adc_take_measurements(measurements, VOLTAGE);
 	bool any_failures = config_evaluate_voltages(measurements);
-	adc_measurement_wire_t wire_measurements[NUM_VOLTAGE_CHANNELS] = {0};
-	adc_measurements_to_wire(measurements, wire_measurements, NUM_VOLTAGE_CHANNELS);
-	rpi_send_debug_info((uint8_t*)wire_measurements, sizeof(wire_measurements));
+	rpi_send_debug_info((uint8_t*)measurements, sizeof(measurements));
 	if (any_failures) {
 		lcd_clear_screen();
 		lcd_printf(LCD_LINE_1, "Voltage Fault");

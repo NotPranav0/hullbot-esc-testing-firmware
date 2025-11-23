@@ -3,6 +3,7 @@
 
 #include "stm32l4xx_hal.h"
 #include "esc.h"
+#include <stdbool.h>
 
 #define NUM_VOLTAGE_CHANNELS 7
 #define NUM_RESISTANCE_CHANNELS 9
@@ -18,28 +19,19 @@ typedef enum {
 	VOLTAGE = 1
 } measurement_type_t;
 
+#pragma pack(push, 1)
 typedef struct {
 	char name[NAME_SIZE];
 	float measurement;
-    measurement_type_t type;
-    adc_result_t result;
-} adc_measurement_t;
-
-// ---- Wire representation for SPI (fixed-size) ----
-#pragma pack(push, 1)
-typedef struct {
-    char    name[NAME_SIZE];   
-    float   measurement;       
-    uint8_t type;              // RESISTANCE / VOLTAGE
-    uint8_t result;            // PASS / FAIL
+    uint8_t type;
+    uint8_t result;
     bool esc_connected;
-} adc_measurement_wire_t;
+} adc_measurement_t;
 #pragma pack(pop)
 
 void adc_init(ADC_HandleTypeDef* adc);
 void adc_set_1v2_source(esc_power_mode_t mode);
 void adc_take_measurements(adc_measurement_t* measurements, measurement_type_t type);
-void adc_measurements_to_wire(const adc_measurement_t* measurements, adc_measurement_wire_t* wire_measurements, int num_measurements);
 
 
 

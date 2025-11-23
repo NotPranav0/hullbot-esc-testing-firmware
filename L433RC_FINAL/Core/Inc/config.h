@@ -11,7 +11,6 @@ NUM_VOLTAGE_CHANNELS
 NUM_RESISTANCE_CHANNELS
 */
 
-// no padding bytes.
 #pragma pack(push, 1)
 
 typedef struct {

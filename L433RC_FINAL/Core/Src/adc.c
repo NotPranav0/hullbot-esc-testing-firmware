@@ -94,15 +94,7 @@ void adc_take_measurements(adc_measurement_t* measurements, measurement_type_t t
 
 }
 
-void adc_measurements_to_wire(const adc_measurement_t* measurements, adc_measurement_wire_t* wire_measurements, int num_measurements) {
-	for (int i = 0; i < num_measurements; i++) {
-		strncpy(wire_measurements[i].name, measurements[i].name, NAME_SIZE);
-		wire_measurements[i].name[NAME_SIZE - 1] = '\0'; 
-		wire_measurements[i].measurement = measurements[i].measurement;
-		wire_measurements[i].type = (uint8_t)measurements[i].type;
-		wire_measurements[i].result = (uint8_t)measurements[i].result;
-	}
-}
+// void adc_measurements_to_wire removed
 
 // Private 
 

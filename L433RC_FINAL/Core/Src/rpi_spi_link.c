@@ -22,12 +22,15 @@ typedef enum {
     PING:       STM32 sends a ping to Pi
     LOG_MESSAGE: STM32 sends a log message to Pi
     DEBUG_INFO: STM32 sends debug information to Pi
+    FLASH_FIRMWARE_REQUEST: STM32 sends firmware flash request to Pi
+    POWEROFF: STM32 sends poweroff command to Pi
 */
 typedef enum {
 	PING = 0x80,
 	LOG_MESSAGE = 0x81,
 	DEBUG_INFO = 0x82,
-    FLASH_FIRMWARE_REQUEST = 0x83
+    FLASH_FIRMWARE_REQUEST = 0x83,
+    POWEROFF = 0x84
 } tx_commands_t;
 
 static uint8_t spi_tx_buf[BUFFER_SIZE];
@@ -38,6 +41,19 @@ static SPI_HandleTypeDef* h_spi;
 volatile bool* h_packet_recieved;
 
 static config_t* h_config;
+
+#define TX_QUEUE_SIZE 10
+
+typedef struct {
+    uint8_t data[BUFFER_SIZE];
+} tx_packet_t;
+
+static tx_packet_t tx_queue[TX_QUEUE_SIZE];
+static volatile uint8_t tx_head = 0;
+static volatile uint8_t tx_tail = 0;
+static volatile bool tx_active = false;
+
+void load_next_packet(void);
 
 void spi_int_assert(void);
 void spi_int_deassert(void);
@@ -64,6 +80,10 @@ void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved, config_t* config) 
     memset(spi_tx_buf, 0, BUFFER_SIZE);
     memset(spi_rx_buf, 0, BUFFER_SIZE);
     memset(rx_copy_buffer, 0, BUFFER_SIZE);
+
+    tx_head = 0;
+    tx_tail = 0;
+    tx_active = false;
 
     start_listening();
 }
@@ -135,12 +155,11 @@ void rpi_send_firmware_flash_request() {
 }
 
 /*
-    Simulates pressing the RPi power button to turn it on or off
+    Sends poweroff command to RPi
 */
 void rpi_press_power_button(void) {
-    HAL_GPIO_WritePin(SHUTDOWN_GPIO_Port, SHUTDOWN_Pin, GPIO_PIN_RESET);
-    HAL_Delay(1000);
-    HAL_GPIO_WritePin(SHUTDOWN_GPIO_Port, SHUTDOWN_Pin, GPIO_PIN_SET);
+    const char* data = "poweroff";
+    send_packet_to_pi(POWEROFF, (const uint8_t*)data, strlen(data));
 }
 
 /*
@@ -208,6 +227,23 @@ void process_config(config_t* received_config) {
 }
 
 /*
+    Loads next packet from queue into TX buffer
+*/
+void load_next_packet(void) {
+    // if queue is empty, set tx_active to false and clear TX buffer
+    if (tx_head == tx_tail) {
+        tx_active = false;
+        memset(spi_tx_buf, 0, BUFFER_SIZE);
+        return;
+    }
+
+    tx_active = true;
+    memcpy(spi_tx_buf, tx_queue[tx_head].data, BUFFER_SIZE);
+    tx_head = (tx_head + 1) % TX_QUEUE_SIZE;
+    spi_int_assert();
+}
+
+/*
     Sends packet to RPi over SPI
     @param command: Command type to send
     @param payload: Pointer to payload data
@@ -219,14 +255,31 @@ void send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t l
        return;
     }
 
-    spi_tx_buf[0] = command;
-    spi_tx_buf[1] = (length >> 8) & 0xFF;
-    spi_tx_buf[2] = length & 0xFF;
+    __disable_irq();
+
+    // drop packet if queue is full
+    if (((tx_tail + 1) % TX_QUEUE_SIZE) == tx_head) {
+    	__enable_irq();
+    	return;
+    }
+
+    tx_packet_t* p = &tx_queue[tx_tail];
+    memset(p->data, 0, BUFFER_SIZE);
+
+    p->data[0] = command;
+    p->data[1] = (length >> 8) & 0xFF;
+    p->data[2] = length & 0xFF;
 
 
-    memcpy(&spi_tx_buf[3], payload, length);
+    memcpy(&p->data[3], payload, length);
 
-    spi_int_assert();
+    tx_tail = (tx_tail + 1) % TX_QUEUE_SIZE;
+
+    if (!tx_active) {
+    	load_next_packet();
+    }
+
+    __enable_irq();
 }
 
 // STM32 HAL_SPI CALLBACKS
@@ -234,7 +287,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *spi) {
 	spi_int_deassert();
 	*h_packet_recieved = true;
 	memcpy(rx_copy_buffer, spi_rx_buf, BUFFER_SIZE);
-
+	load_next_packet();
 }
 
 void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi) {
