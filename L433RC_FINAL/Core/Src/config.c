@@ -3,7 +3,7 @@
 
 static config_t config;
 
-#define SOURCE_V 1.215f
+#define SOURCE_V 1.215f // calibrate by measuring w multimeter
 
 
 static const config_t default_config = { // NAME, THRESHOLD
@@ -14,18 +14,18 @@ static const config_t default_config = { // NAME, THRESHOLD
         { "P3V3_IO", 10000.0f },
         { "P5V",     10000.0f },
         { "P10V",    10000.0f },
-        { "PVMAIN",  10000.0f },
+        { "PVMAIN",  700.0f },		// based on floating (no esc connected) value
         { "SWD",     100000.0f },
-        { "CAN",     100000.0f },
+        { "CAN",     1.0f },		// based on floating (no esc connected) value
     },
     .voltage_tolerances = { // NAME, EXPECTED, TOLERANCE
         { "P1V2",   1.2f,  0.1f },
         { "P1V8",   1.8f,  0.1f },
         { "P3V3_A", 3.3f,  0.1f },
         { "P3V3_IO",3.3f,  0.1f },
-        { "P5V",    5.0f,  0.1f },
-        { "P10V",   10.0f, 0.1f },
-        { "PVMAIN", 36.0f, 0.1f },
+        { "P5V",    3.0f,  0.1f }, // voltage dividers
+        { "P10V",   3.0f, 0.1f },
+        { "PVMAIN", 3.0f, 0.1f },
     }
 };
 

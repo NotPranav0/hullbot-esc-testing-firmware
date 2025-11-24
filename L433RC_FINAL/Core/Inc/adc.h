@@ -25,7 +25,7 @@ typedef struct {
 	float measurement;
     uint8_t type;
     uint8_t result;
-    bool esc_connected;
+    bool connected;
 } adc_measurement_t;
 #pragma pack(pop)
 

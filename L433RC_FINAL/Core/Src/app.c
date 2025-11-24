@@ -46,9 +46,6 @@ void test_main() {
 		adc_measurement_t measurements[NUM_RESISTANCE_CHANNELS] = {0};
 		adc_take_measurements(measurements, RESISTANCE);
 		//config_evaluate_resistances(measurements);
-		for (int i = 0; i < NUM_RESISTANCE_CHANNELS; i++) {
-			measurements[i].esc_connected = esc_is_connected();
-		}
 		rpi_send_debug_info((uint8_t*)measurements, sizeof(measurements));
 		HAL_Delay(1000);
 	}

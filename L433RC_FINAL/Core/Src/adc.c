@@ -2,6 +2,7 @@
 #include "stm32l4xx_hal.h"
 #include "main.h"
 #include <string.h>
+#include "esc.h"
 
 static ADC_HandleTypeDef* h_adc;
 
@@ -88,13 +89,13 @@ void adc_take_measurements(adc_measurement_t* measurements, measurement_type_t t
 			measurements[net].measurement += (raw_to_volts(raw_val) / (float)NUM_SAMPLES);
 			strncpy(measurements[net].name, channels[net].name, NAME_SIZE);
 			measurements[net].type = type;
+			measurements[net].connected = esc_is_connected();
 		}
 	}
 
 
 }
 
-// void adc_measurements_to_wire removed
 
 // Private 
 
