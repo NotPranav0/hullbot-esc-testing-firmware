@@ -7,8 +7,8 @@
 
 #define TM_INVALID_STDID 0xFFFFFFFF
 
-volatile tinymovr_can_tx_t g_can_tx;
-volatile tinymovr_can_rx_t g_can_rx;
+tinymovr_can_tx_t g_can_tx;
+tinymovr_can_rx_t g_can_rx;
 
 uint8_t CAN_ID = 1;
 

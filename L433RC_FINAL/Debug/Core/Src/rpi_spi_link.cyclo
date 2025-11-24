@@ -12,6 +12,6 @@
 ../Core/Src/rpi_spi_link.c:210:6:process_text	2
 ../Core/Src/rpi_spi_link.c:225:6:process_config	1
 ../Core/Src/rpi_spi_link.c:232:6:load_next_packet	2
-../Core/Src/rpi_spi_link.c:252:6:send_packet_to_pi	4
-../Core/Src/rpi_spi_link.c:286:6:HAL_SPI_TxRxCpltCallback	1
-../Core/Src/rpi_spi_link.c:293:6:HAL_SPI_ErrorCallback	1
+../Core/Src/rpi_spi_link.c:251:6:send_packet_to_pi	5
+../Core/Src/rpi_spi_link.c:290:6:HAL_SPI_TxRxCpltCallback	2
+../Core/Src/rpi_spi_link.c:301:6:HAL_SPI_ErrorCallback	1

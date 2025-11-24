@@ -240,7 +240,6 @@ void load_next_packet(void) {
     tx_active = true;
     memcpy(spi_tx_buf, tx_queue[tx_head].data, BUFFER_SIZE);
     tx_head = (tx_head + 1) % TX_QUEUE_SIZE;
-    spi_int_assert();
 }
 
 /*
@@ -276,7 +275,12 @@ void send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t l
     tx_tail = (tx_tail + 1) % TX_QUEUE_SIZE;
 
     if (!tx_active) {
+    	HAL_SPI_Abort(h_spi);
     	load_next_packet();
+    	start_listening();
+    	if (tx_active) {
+    		spi_int_assert();
+    	}
     }
 
     __enable_irq();
@@ -288,6 +292,10 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *spi) {
 	*h_packet_recieved = true;
 	memcpy(rx_copy_buffer, spi_rx_buf, BUFFER_SIZE);
 	load_next_packet();
+	start_listening();
+	if (tx_active) {
+		spi_int_assert();
+	}
 }
 
 void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi) {
