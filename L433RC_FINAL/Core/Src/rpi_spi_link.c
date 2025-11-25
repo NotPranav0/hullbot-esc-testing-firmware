@@ -4,8 +4,9 @@
 #include <stdio.h>
 
 #include "rpi_spi_link.h"
-#include "lcd.h"
 #include "main.h"
+
+#define SPI_TIMEOUT 100
 
 /*
     Pi -> STM32 Commands
@@ -35,57 +36,32 @@ typedef enum {
 
 static uint8_t spi_tx_buf[BUFFER_SIZE];
 static uint8_t spi_rx_buf[BUFFER_SIZE];
-static uint8_t rx_copy_buffer[BUFFER_SIZE];
 
 static SPI_HandleTypeDef* h_spi;
-volatile bool* h_packet_recieved;
 
 static config_t* h_config;
 
-#define TX_QUEUE_SIZE 10
-
-typedef struct {
-    uint8_t data[BUFFER_SIZE];
-} tx_packet_t;
-
-static tx_packet_t tx_queue[TX_QUEUE_SIZE];
-static volatile uint8_t tx_head = 0;
-static volatile uint8_t tx_tail = 0;
-static volatile bool tx_active = false;
-
-void load_next_packet(void);
-
 void spi_int_assert(void);
 void spi_int_deassert(void);
-void start_listening(void);
 void process_text(char* text, uint16_t len, uint8_t* ret_buf);
 void process_config(config_t* received_config);
-void send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t length);
+bool send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t length);
 
 // Public
 
 /*
     Initializes RPi SPI link
     @param spi: Pointer to initialized SPI_HandleTypeDef
-    @param packet_recieved: Pointer to boolean flag set when packet is recieved
     @param config: Pointer to current config_t struct
 */
-void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved, config_t* config) {
+void link_init(SPI_HandleTypeDef *spi, config_t* config) {
 	h_config = config;
     h_spi = spi;
-    h_packet_recieved = packet_recieved;
 
     HAL_GPIO_WritePin(SHUTDOWN_GPIO_Port, SHUTDOWN_Pin, GPIO_PIN_SET);
 
     memset(spi_tx_buf, 0, BUFFER_SIZE);
     memset(spi_rx_buf, 0, BUFFER_SIZE);
-    memset(rx_copy_buffer, 0, BUFFER_SIZE);
-
-    tx_head = 0;
-    tx_tail = 0;
-    tx_active = false;
-
-    start_listening();
 }
 
 /*
@@ -94,27 +70,34 @@ void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved, config_t* config) 
     @return uint32_t: Length of return data stored in ret_buf
 */
 uint32_t link_process_packet(uint8_t* ret_buf) {
-	rx_commands_t command = rx_copy_buffer[0];
-	uint16_t payload_len = (rx_copy_buffer[1] << 8) | rx_copy_buffer[2];
-    const uint8_t* payload = &rx_copy_buffer[3];
+    
+    // clean tx buffer
+    memset(spi_tx_buf, 0, BUFFER_SIZE);
+    
+    HAL_StatusTypeDef status = HAL_SPI_TransmitReceive(h_spi, spi_tx_buf, spi_rx_buf, BUFFER_SIZE, SPI_TIMEOUT);
+    
+    if (status != HAL_OK) {
+        return 0;
+    }
+    
+
+	rx_commands_t command = spi_rx_buf[0];
+	uint16_t payload_len = (spi_rx_buf[1] << 8) | spi_rx_buf[2];
+    const uint8_t* payload = &spi_rx_buf[3];
 
     switch (command) {
         case SET_CONFIG:
         	process_config((config_t*)payload);
-        	*h_packet_recieved = false;
             return 0;
             break;
         case SEND_TEXT:
             process_text((char*)payload, payload_len, ret_buf);
-            *h_packet_recieved = false;
             return payload_len;
             break;
         case FLASH_FIRMWARE_STATUS:
             process_text((char*)payload, payload_len, ret_buf);
-            *h_packet_recieved = false;
             return payload_len;
         default:
-        	*h_packet_recieved = false;
             break;
     }
 
@@ -170,11 +153,13 @@ bool rpi_is_awake(void) {
 	const char* text = "ping";
 	send_packet_to_pi(PING, (const uint8_t*)text, strlen(text));
 	HAL_Delay(10);
-	if (*h_packet_recieved) {
-		*h_packet_recieved = false;
-		return true;
-	}
-	return false;
+    
+		char resp[BUFFER_SIZE];
+        uint16_t resp_len = link_process_packet((uint8_t*)resp);
+        if(strncmp(resp, "pong", resp_len) == 0) {
+		    return true;
+	    }
+    return false;
 }
 
 
@@ -195,22 +180,13 @@ void spi_int_deassert(void) {
 }
 
 /*
-    Starts listening for incoming SPI data from RPi using DMA (Non-blocki)
-*/
-void start_listening(void) {
-	while (HAL_SPI_TransmitReceive_DMA(h_spi, spi_tx_buf, spi_rx_buf, BUFFER_SIZE) != HAL_OK) {}
-}
-
-/*
     Processes text command received from RPi
     @param text: Pointer to received text
     @param len: Length of received text
     @param ret_buf: Pointer to buffer to store any return text data
 */
 void process_text(char* text, uint16_t len, uint8_t* ret_buf) {
-    if(strncmp(text, "pong", len) == 0) {
-    	//do nothing
-    } else if(strncmp(text, "reset", len) == 0) {
+    if(strncmp(text, "reset", len) == 0) {
         NVIC_SystemReset();
     } else {
     	// no associated command, pass text back to caller
@@ -227,78 +203,31 @@ void process_config(config_t* received_config) {
 }
 
 /*
-    Loads next packet from queue into TX buffer
-*/
-void load_next_packet(void) {
-    // if queue is empty, set tx_active to false and clear TX buffer
-    if (tx_head == tx_tail) {
-        tx_active = false;
-        memset(spi_tx_buf, 0, BUFFER_SIZE);
-        return;
-    }
-
-    tx_active = true;
-    memcpy(spi_tx_buf, tx_queue[tx_head].data, BUFFER_SIZE);
-    tx_head = (tx_head + 1) % TX_QUEUE_SIZE;
-}
-
-/*
-    Sends packet to RPi over SPI
+    Sends packet to RPi over SPI (Blocking)
     @param command: Command type to send
     @param payload: Pointer to payload data
     @param length: Length of payload data
+    @return bool: true if packet was sent successfully, false otherwise
 */
-void send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t length) {
+bool send_packet_to_pi(tx_commands_t command, const uint8_t* payload, uint16_t length) {
     if ((length + 3) > BUFFER_SIZE) {
-       Error_Handler();
-       return;
+       return false;
     }
 
-    __disable_irq();
-
-    // drop packet if queue is full
-    if (((tx_tail + 1) % TX_QUEUE_SIZE) == tx_head) {
-    	__enable_irq();
-    	return;
+    // Construct packet
+    memset(spi_tx_buf, 0, BUFFER_SIZE);
+    spi_tx_buf[0] = command;
+    spi_tx_buf[1] = (length >> 8) & 0xFF;
+    spi_tx_buf[2] = length & 0xFF;
+    if (length > 0 && payload != NULL) {
+        memcpy(&spi_tx_buf[3], payload, length);
     }
 
-    tx_packet_t* p = &tx_queue[tx_tail];
-    memset(p->data, 0, BUFFER_SIZE);
+    spi_int_assert();
+    
+    HAL_StatusTypeDef status = HAL_SPI_TransmitReceive(h_spi, spi_tx_buf, spi_rx_buf, BUFFER_SIZE, SPI_TIMEOUT);
+    
+    spi_int_deassert();
 
-    p->data[0] = command;
-    p->data[1] = (length >> 8) & 0xFF;
-    p->data[2] = length & 0xFF;
-
-
-    memcpy(&p->data[3], payload, length);
-
-    tx_tail = (tx_tail + 1) % TX_QUEUE_SIZE;
-
-    if (!tx_active) {
-    	HAL_SPI_Abort(h_spi);
-    	load_next_packet();
-    	start_listening();
-    	if (tx_active) {
-    		spi_int_assert();
-    	}
-    }
-
-    __enable_irq();
-}
-
-// STM32 HAL_SPI CALLBACKS
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *spi) {
-	spi_int_deassert();
-	*h_packet_recieved = true;
-	memcpy(rx_copy_buffer, spi_rx_buf, BUFFER_SIZE);
-	load_next_packet();
-	start_listening();
-	if (tx_active) {
-		spi_int_assert();
-	}
-}
-
-void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi) {
-	HAL_SPI_Abort(hspi);
-	start_listening();
+    return status == HAL_OK;
 }

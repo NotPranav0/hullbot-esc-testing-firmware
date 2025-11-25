@@ -12,7 +12,7 @@
 // MAX SPI PAYLOAD SIZE
 #define PAYLOAD_SIZE BUFFER_SIZE - 4
 
-void link_init(SPI_HandleTypeDef *spi, bool* packet_recieved, config_t* config);
+void link_init(SPI_HandleTypeDef *spi, config_t* config);
 uint32_t link_process_packet(uint8_t* ret_buf);
 
 void rpi_printf(const char* msg, ...);
